@@ -6,12 +6,12 @@
  */
 
 const CATEGORY = {
-  STATIC: "static",
-  THEMED: "themed",
-  DYNAMIC_PLAIN: "dynamic-plain",
-  DYNAMIC_THEMED: "dynamic-themed",
-  VARIANT_THEMED: "variant-themed",
-  VARIANT_PLAIN: "variant-plain",
+  STATIC: 'static',
+  THEMED: 'themed',
+  DYNAMIC_PLAIN: 'dynamic-plain',
+  DYNAMIC_THEMED: 'dynamic-themed',
+  VARIANT_THEMED: 'variant-themed',
+  VARIANT_PLAIN: 'variant-plain',
 } as const;
 
 const CATEGORY_LIST = [
@@ -24,12 +24,12 @@ const CATEGORY_LIST = [
 ] as const;
 
 const CATEGORY_SHORT = {
-  [CATEGORY.STATIC]: "STC",
-  [CATEGORY.THEMED]: "THM",
-  [CATEGORY.DYNAMIC_PLAIN]: "DYN",
-  [CATEGORY.DYNAMIC_THEMED]: "DYN+T",
-  [CATEGORY.VARIANT_THEMED]: "VAR+T",
-  [CATEGORY.VARIANT_PLAIN]: "VAR",
+  [CATEGORY.STATIC]: 'STC',
+  [CATEGORY.THEMED]: 'THM',
+  [CATEGORY.DYNAMIC_PLAIN]: 'DYN',
+  [CATEGORY.DYNAMIC_THEMED]: 'DYN+T',
+  [CATEGORY.VARIANT_THEMED]: 'VAR+T',
+  [CATEGORY.VARIANT_PLAIN]: 'VAR',
 } as const;
 
 const INSTANCE_COUNT = 20;
@@ -49,16 +49,16 @@ const THEME_TOGGLE_DELAY_MS = 600;
 const DASHBOARD_THROTTLE_MS = 250;
 
 const TEST_ID = {
-  THEME_TOGGLE: "control-theme-toggle",
-  RUN_BENCHMARK: "control-run-benchmark",
-  VARIANT_TOGGLE: "control-variant-toggle",
-  TAB_HOME: "tab-home",
-  TAB_STATIC: "tab-static",
-  TAB_NESTED: "tab-nested",
-  NESTED_BUMP: "nested-bump",
-  NESTED_THEME: "nested-theme",
-  NESTED_RESET: "nested-reset",
-  REPORT_OUTPUT: "report-output",
+  THEME_TOGGLE: 'control-theme-toggle',
+  RUN_BENCHMARK: 'control-run-benchmark',
+  VARIANT_TOGGLE: 'control-variant-toggle',
+  TAB_HOME: 'tab-home',
+  TAB_STATIC: 'tab-static',
+  TAB_NESTED: 'tab-nested',
+  NESTED_BUMP: 'nested-bump',
+  NESTED_THEME: 'nested-theme',
+  NESTED_RESET: 'nested-reset',
+  REPORT_OUTPUT: 'report-output',
 } as const;
 
 function boxTestId(category: string, index: number) {

@@ -4,9 +4,9 @@
  * background.
  */
 
-import React from "react";
-import { Text, View } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import React from 'react';
+import { Text, View } from 'react-native';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 type BoxContentProps = {
   label: string;
@@ -15,23 +15,23 @@ type BoxContentProps = {
 
 const stylesheet = createStyleSheet({
   pill: {
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: 'rgba(0,0,0,0.6)',
     borderRadius: 4,
     paddingHorizontal: 3,
     paddingVertical: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   label: {
-    color: "#ffffff",
+    color: '#ffffff',
     fontSize: 8,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   count: {
-    color: "#ffffff",
+    color: '#ffffff',
     fontSize: 12,
-    fontWeight: "700",
-    fontVariant: ["tabular-nums"],
+    fontWeight: '700',
+    fontVariant: ['tabular-nums'],
   },
 });
 

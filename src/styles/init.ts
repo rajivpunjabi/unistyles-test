@@ -6,10 +6,10 @@
  * every call site. Import this file once, early in the app entry.
  */
 
-import { UnistylesRegistry } from "react-native-unistyles";
+import { UnistylesRegistry } from 'react-native-unistyles';
 
-import { breakpoints } from "./breakpoints";
-import { darkTheme, lightTheme } from "./themes";
+import { breakpoints } from './breakpoints';
+import { darkTheme, lightTheme } from './themes';
 
 type AppBreakpoints = typeof breakpoints;
 type AppThemes = {
@@ -17,7 +17,7 @@ type AppThemes = {
   dark: typeof darkTheme;
 };
 
-declare module "react-native-unistyles" {
+declare module 'react-native-unistyles' {
   export interface UnistylesBreakpoints extends AppBreakpoints {}
   export interface UnistylesThemes extends AppThemes {}
 }

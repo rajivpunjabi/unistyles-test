@@ -1,16 +1,12 @@
-import React, { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import {
-  createStyleSheet,
-  UnistylesRuntime,
-  useStyles,
-} from "react-native-unistyles";
+import React, { useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { createStyleSheet, UnistylesRuntime, useStyles } from 'react-native-unistyles';
 
-import { NestedDashboard } from "@/components/dashboard";
-import { NestedTree } from "@/perf/components/nested-node";
-import { NEST_TREE_LIST, TEST_ID } from "@/perf/constants";
-import { nestedMetricsStore } from "@/perf/nested-metrics-store";
-import { NestedProfiler } from "@/perf/nested-profiler";
+import { NestedDashboard } from '@/components/dashboard';
+import { NestedTree } from '@/perf/components/nested-node';
+import { NEST_TREE_LIST, TEST_ID } from '@/perf/constants';
+import { nestedMetricsStore } from '@/perf/nested-metrics-store';
+import { NestedProfiler } from '@/perf/nested-profiler';
 
 export default function NestedScreen() {
   const { styles } = useStyles(stylesheet);
@@ -22,7 +18,7 @@ export default function NestedScreen() {
 
   const onToggleTheme = () => {
     UnistylesRuntime.setAdaptiveThemes(false);
-    const next = UnistylesRuntime.themeName === "dark" ? "light" : "dark";
+    const next = UnistylesRuntime.themeName === 'dark' ? 'light' : 'dark';
     UnistylesRuntime.setTheme(next);
   };
 
@@ -33,25 +29,13 @@ export default function NestedScreen() {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.controls}>
-        <Pressable
-          testID={TEST_ID.NESTED_BUMP}
-          style={styles.button}
-          onPress={onBump}
-        >
+        <Pressable testID={TEST_ID.NESTED_BUMP} style={styles.button} onPress={onBump}>
           <Text style={styles.label}>Bump top-level: {bump}</Text>
         </Pressable>
-        <Pressable
-          testID={TEST_ID.NESTED_THEME}
-          style={styles.button}
-          onPress={onToggleTheme}
-        >
+        <Pressable testID={TEST_ID.NESTED_THEME} style={styles.button} onPress={onToggleTheme}>
           <Text style={styles.label}>Toggle theme</Text>
         </Pressable>
-        <Pressable
-          testID={TEST_ID.NESTED_RESET}
-          style={styles.button}
-          onPress={onReset}
-        >
+        <Pressable testID={TEST_ID.NESTED_RESET} style={styles.button} onPress={onReset}>
           <Text style={styles.label}>Reset metrics</Text>
         </Pressable>
       </View>
@@ -60,9 +44,7 @@ export default function NestedScreen() {
 
       {NEST_TREE_LIST.map((tree) => (
         <View key={tree}>
-          <Text style={styles.treeHeader}>
-            Tree {tree} (non-memoized, styles at leaves)
-          </Text>
+          <Text style={styles.treeHeader}>Tree {tree} (non-memoized, styles at leaves)</Text>
           <NestedProfiler tree={tree}>
             <NestedTree tree={tree} />
           </NestedProfiler>
@@ -75,7 +57,7 @@ export default function NestedScreen() {
 const stylesheet = createStyleSheet({
   screen: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
   },
   content: {
     paddingTop: 48,
@@ -89,18 +71,18 @@ const stylesheet = createStyleSheet({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: "#2b2f31",
+    backgroundColor: '#2b2f31',
   },
   label: {
-    color: "#ffffff",
-    fontWeight: "600",
-    textAlign: "center",
+    color: '#ffffff',
+    fontWeight: '600',
+    textAlign: 'center',
   },
   treeHeader: {
-    color: "#ffffff",
-    backgroundColor: "rgba(0,0,0,0.7)",
+    color: '#ffffff',
+    backgroundColor: 'rgba(0,0,0,0.7)',
     fontSize: 12,
-    fontWeight: "700",
+    fontWeight: '700',
     paddingVertical: 4,
     paddingHorizontal: 8,
     marginTop: 12,
