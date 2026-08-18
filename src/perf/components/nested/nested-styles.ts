@@ -1,11 +1,14 @@
 /**
  * Shared styles + shape constants for the nested binary trees. Each variant tree
- * (all/parent/leaf) is its own component; these are the common node styles they
- * draw from — themed sheets for theme consumers, plain inline styles for non-
- * consumers.
+ * (all/parent/leaf) is its own component.
+ *
+ * Themed node/leaf are unistyles createStyleSheet (theme consumers, read via
+ * useStyles). Plain node/leaf + the children row are react-native StyleSheet —
+ * NOT unistyles — on purpose: the plain nodes must stay non-consumers so a theme
+ * toggle never re-renders them (that is what the leaf-no-memo variant shows).
  */
 
-import type { ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createStyleSheet } from 'react-native-unistyles';
 
 import { NEST_BRANCHING, NEST_DEPTH } from '../../constants';
@@ -14,33 +17,33 @@ const CHILD_INDICES = Array.from({ length: NEST_BRANCHING }, (_, i) => i);
 
 const LAST_LEVEL = NEST_DEPTH - 1;
 
-const PLAIN_CHAIN_STYLE = {
-  padding: 3,
-  margin: 1,
-  borderWidth: 1,
-  borderColor: '#88888855',
-  borderRadius: 4,
-  alignItems: 'center',
-  gap: 3,
-} satisfies ViewStyle;
-
-const PLAIN_LEAF_STYLE = {
-  width: 40,
-  height: 30,
-  margin: 1,
-  borderRadius: 4,
-  borderWidth: 1,
-  borderColor: '#88888855',
-  backgroundColor: '#888888',
-  alignItems: 'center',
-  justifyContent: 'center',
-} satisfies ViewStyle;
-
-const CHILDREN_ROW_STYLE = {
-  flexDirection: 'row',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-} satisfies ViewStyle;
+const plainStyles = StyleSheet.create({
+  plainChain: {
+    padding: 3,
+    margin: 1,
+    borderWidth: 1,
+    borderColor: '#88888855',
+    borderRadius: 4,
+    alignItems: 'center',
+    gap: 3,
+  },
+  plainLeaf: {
+    width: 40,
+    height: 30,
+    margin: 1,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#88888855',
+    backgroundColor: '#888888',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  childrenRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+});
 
 const chainThemedSheet = createStyleSheet((theme) => ({
   node: {
@@ -69,12 +72,4 @@ const leafThemedSheet = createStyleSheet((theme) => ({
   },
 }));
 
-export {
-  CHILD_INDICES,
-  LAST_LEVEL,
-  PLAIN_CHAIN_STYLE,
-  PLAIN_LEAF_STYLE,
-  CHILDREN_ROW_STYLE,
-  chainThemedSheet,
-  leafThemedSheet,
-};
+export { CHILD_INDICES, LAST_LEVEL, plainStyles, chainThemedSheet, leafThemedSheet };

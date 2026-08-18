@@ -14,13 +14,7 @@ import { NEST_BRANCHING, NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
 import { useNestedRenderTracker } from '../../use-nested-render-tracker';
 import { BoxContent } from '../box-content';
-import {
-  CHILD_INDICES,
-  CHILDREN_ROW_STYLE,
-  LAST_LEVEL,
-  PLAIN_LEAF_STYLE,
-  chainThemedSheet,
-} from './nested-styles';
+import { CHILD_INDICES, LAST_LEVEL, chainThemedSheet, plainStyles } from './nested-styles';
 
 const KEY: NestVariantKey = 'parent-memo';
 
@@ -30,7 +24,7 @@ const ParentLeaf = memo(function ParentLeaf({ index }: { index: number }) {
   useNestedRenderTracker(KEY, NEST_PART.LEAF, renders.current === 1);
 
   return (
-    <View style={PLAIN_LEAF_STYLE}>
+    <View style={plainStyles.plainLeaf}>
       <BoxContent label={`L${index}`} count={renders.current} />
     </View>
   );
@@ -48,7 +42,7 @@ const ParentChain = memo(function ParentChain({ level, index }: { level: number;
   return (
     <View style={styles.node}>
       <BoxContent label={`C${level}`} count={renders.current} />
-      <View style={CHILDREN_ROW_STYLE}>
+      <View style={plainStyles.childrenRow}>
         {CHILD_INDICES.map((c) => {
           const childIndex = index * NEST_BRANCHING + c;
           return childIsLeaf ? (

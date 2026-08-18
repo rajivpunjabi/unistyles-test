@@ -14,10 +14,10 @@ import { useNestedRenderTracker } from '../../use-nested-render-tracker';
 import { BoxContent } from '../box-content';
 import {
   CHILD_INDICES,
-  CHILDREN_ROW_STYLE,
   LAST_LEVEL,
   chainThemedSheet,
   leafThemedSheet,
+  plainStyles,
 } from './nested-styles';
 
 const KEY: NestVariantKey = 'all-no-memo';
@@ -47,7 +47,7 @@ function AllChain({ level, index }: { level: number; index: number }) {
   return (
     <View style={styles.node}>
       <BoxContent label={`C${level}`} count={renders.current} />
-      <View style={CHILDREN_ROW_STYLE}>
+      <View style={plainStyles.childrenRow}>
         {CHILD_INDICES.map((c) => {
           const childIndex = index * NEST_BRANCHING + c;
           return childIsLeaf ? (

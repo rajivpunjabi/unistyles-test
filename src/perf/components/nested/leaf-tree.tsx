@@ -14,13 +14,7 @@ import { NEST_BRANCHING, NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
 import { useNestedRenderTracker } from '../../use-nested-render-tracker';
 import { BoxContent } from '../box-content';
-import {
-  CHILD_INDICES,
-  CHILDREN_ROW_STYLE,
-  LAST_LEVEL,
-  PLAIN_CHAIN_STYLE,
-  leafThemedSheet,
-} from './nested-styles';
+import { CHILD_INDICES, LAST_LEVEL, leafThemedSheet, plainStyles } from './nested-styles';
 
 const KEY: NestVariantKey = 'leaf-no-memo';
 
@@ -46,9 +40,9 @@ function LeafChain({ level, index }: { level: number; index: number }) {
   const childIsLeaf = childLevel >= LAST_LEVEL;
 
   return (
-    <View style={PLAIN_CHAIN_STYLE}>
+    <View style={plainStyles.plainChain}>
       <BoxContent label={`C${level}`} count={renders.current} />
-      <View style={CHILDREN_ROW_STYLE}>
+      <View style={plainStyles.childrenRow}>
         {CHILD_INDICES.map((c) => {
           const childIndex = index * NEST_BRANCHING + c;
           return childIsLeaf ? (
