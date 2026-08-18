@@ -1,10 +1,13 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from 'expo-router/ui';
 import React from 'react';
-import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Pressable, Text, useColorScheme, View } from 'react-native';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Colors } from '@/constants/theme';
 
 export default function AppTabs() {
+  const { styles } = useStyles(stylesheet);
+
   return (
     <Tabs>
       <TabSlot style={styles.slot} />
@@ -13,8 +16,8 @@ export default function AppTabs() {
           <TabTrigger name="home" href="/" asChild>
             <TabButton>Home</TabButton>
           </TabTrigger>
-          <TabTrigger name="playground" href="/playground" asChild>
-            <TabButton>Playground</TabButton>
+          <TabTrigger name="static" href="/static" asChild>
+            <TabButton>Static</TabButton>
           </TabTrigger>
         </CustomTabList>
       </TabList>
@@ -23,6 +26,7 @@ export default function AppTabs() {
 }
 
 function CustomTabList({ children, ...props }: React.PropsWithChildren) {
+  const { styles } = useStyles(stylesheet);
   const scheme = useColorScheme();
   const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
 
@@ -46,7 +50,7 @@ function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesheet = createStyleSheet({
   slot: {
     height: '100%',
   },

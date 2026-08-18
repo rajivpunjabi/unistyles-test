@@ -21,13 +21,14 @@ export default function AppTabs() {
         />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="playground">
-        <NativeTabs.Trigger.Label>Playground</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="static">
+        <NativeTabs.Trigger.Label>Static</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/playground.png')}
+          src={require('@/assets/images/tabIcons/static.png')}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
+
     </NativeTabs>
   );
 }
