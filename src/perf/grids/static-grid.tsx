@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import {
@@ -48,7 +48,7 @@ function StaticGrid({ active }: StaticGridProps) {
   const { styles } = useStyles(stylesheet);
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
+    <View style={styles.content}>
       <PerfProfiler category={CATEGORY.STATIC}>
         <SectionHeader category={CATEGORY.STATIC} />
         <View style={styles.section}>
@@ -102,7 +102,7 @@ function StaticGrid({ active }: StaticGridProps) {
           ))}
         </View>
       </PerfProfiler>
-    </ScrollView>
+    </View>
   );
 }
 

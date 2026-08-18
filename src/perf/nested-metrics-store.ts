@@ -1,27 +1,27 @@
 /**
- * Non-reactive metrics store for the nested-hierarchy screen, keyed by tree.
- * Only leaf nodes consume styles, so only leaf renders are recorded here.
- * Mirrors metrics-store.ts: written during render via a ref counter, never
- * React state, read by the nested dashboard through a throttled subscription.
+ * Non-reactive metrics store for the nested-variation screen. Keyed by tree
+ * variant, split into chain vs leaf renders so a theme toggle (which re-renders
+ * only where theme is consumed) and a top-level bump (which cascades through
+ * non-memoized nodes) can be told apart per variant.
  */
 
-import { DASHBOARD_THROTTLE_MS, NEST_TREE_LIST } from './constants';
-import type { NestedSnapshot, TreeMetrics } from './types';
+import { DASHBOARD_THROTTLE_MS, NEST_PART, NEST_VARIANT_KEYS } from './constants';
+import type { NestedSnapshot, NestPart, NestVariantKey, VariantMetrics } from './types';
 
-function createEmptyTree(tree: number): TreeMetrics {
+function createEmptyVariant(key: NestVariantKey): VariantMetrics {
   return {
-    tree,
-    leafCount: 0,
-    renderCount: 0,
-    mountCount: 0,
-    updateCount: 0,
-    wastedRenders: 0,
-    commitMs: 0,
+    key,
+    chainNodes: 0,
+    leafNodes: 0,
+    chainRenders: 0,
+    leafRenders: 0,
+    chainWasted: 0,
+    leafWasted: 0,
   };
 }
 
 class NestedMetricsStore {
-  private byTree: TreeMetrics[];
+  private byVariant: Record<NestVariantKey, VariantMetrics>;
   private lastStyleRef: Map<string, unknown>;
   private listeners: Set<() => void>;
   private snapshot: NestedSnapshot;
@@ -29,7 +29,7 @@ class NestedMetricsStore {
   private emitScheduled: boolean;
 
   constructor() {
-    this.byTree = this.freshTrees();
+    this.byVariant = this.freshVariants();
     this.lastStyleRef = new Map();
     this.listeners = new Set();
     this.dirty = true;
@@ -37,40 +37,47 @@ class NestedMetricsStore {
     this.snapshot = this.buildSnapshot();
   }
 
-  private freshTrees(): TreeMetrics[] {
-    const next: TreeMetrics[] = [];
-    for (let i = 0; i < NEST_TREE_LIST.length; i++) {
-      next.push(createEmptyTree(NEST_TREE_LIST[i]));
+  private freshVariants(): Record<NestVariantKey, VariantMetrics> {
+    const next = {} as Record<NestVariantKey, VariantMetrics>;
+    for (let i = 0; i < NEST_VARIANT_KEYS.length; i++) {
+      const key = NEST_VARIANT_KEYS[i];
+      next[key] = createEmptyVariant(key);
     }
     return next;
   }
 
-  recordRender(tree: number, instanceId: string, styleRef: unknown) {
-    const metrics = this.byTree[tree];
+  recordRender(key: NestVariantKey, part: NestPart, instanceId: string, styleRef: unknown) {
+    const metrics = this.byVariant[key];
     const previousRef = this.lastStyleRef.get(instanceId);
     const isMount = previousRef === undefined;
+    const isChain = part === NEST_PART.CHAIN;
 
-    metrics.renderCount += 1;
     if (isMount) {
-      metrics.mountCount += 1;
-      metrics.leafCount += 1;
+      if (isChain) {
+        metrics.chainNodes += 1;
+      } else {
+        metrics.leafNodes += 1;
+      }
     } else {
-      metrics.updateCount += 1;
-      if (previousRef === styleRef) {
-        metrics.wastedRenders += 1;
+      const wasted = previousRef === styleRef;
+      if (isChain) {
+        metrics.chainRenders += 1;
+        if (wasted) {
+          metrics.chainWasted += 1;
+        }
+      } else {
+        metrics.leafRenders += 1;
+        if (wasted) {
+          metrics.leafWasted += 1;
+        }
       }
     }
     this.lastStyleRef.set(instanceId, styleRef);
     this.markDirty();
   }
 
-  recordDuration(tree: number, durationMs: number) {
-    this.byTree[tree].commitMs += durationMs;
-    this.markDirty();
-  }
-
   reset() {
-    this.byTree = this.freshTrees();
+    this.byVariant = this.freshVariants();
     this.lastStyleRef.clear();
     this.markDirty();
     this.emit();
@@ -92,11 +99,12 @@ class NestedMetricsStore {
   };
 
   private buildSnapshot(): NestedSnapshot {
-    const byTree: TreeMetrics[] = [];
-    for (let i = 0; i < this.byTree.length; i++) {
-      byTree.push({ ...this.byTree[i] });
+    const byVariant = {} as Record<NestVariantKey, VariantMetrics>;
+    for (let i = 0; i < NEST_VARIANT_KEYS.length; i++) {
+      const key = NEST_VARIANT_KEYS[i];
+      byVariant[key] = { ...this.byVariant[key] };
     }
-    return { byTree, updatedAt: Date.now() };
+    return { byVariant, updatedAt: Date.now() };
   }
 
   private markDirty() {

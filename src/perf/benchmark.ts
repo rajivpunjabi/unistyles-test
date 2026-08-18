@@ -4,7 +4,6 @@
  * branches. Produces a RunReport and hands it to the caller for display/export.
  */
 
-import { router } from 'expo-router';
 import { UnistylesRuntime } from 'react-native-unistyles';
 
 import {
@@ -53,7 +52,6 @@ async function runBenchmark(): Promise<RunReport> {
   metricsStore.reset();
   const startedAt = Date.now();
 
-  router.push('/static');
   await delay(SETTLE_MS);
   const mountSnapshot = metricsStore.getSnapshot();
 

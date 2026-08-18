@@ -6,10 +6,13 @@ import { Controls } from '@/components/controls';
 import { Dashboard } from '@/components/dashboard';
 import { runBenchmark } from '@/perf/benchmark';
 import { TEST_ID } from '@/perf/constants';
+import { useControl } from '@/perf/controls-store';
 import { exportReport, toJson } from '@/perf/export';
+import { StaticGrid } from '@/perf/grids/static-grid';
 
-export default function HomeScreen() {
+export default function StaticScreen() {
   const { styles } = useStyles(stylesheet);
+  const active = useControl((s) => s.active);
   const [running, setRunning] = useState(false);
   const [reportJson, setReportJson] = useState('');
 
@@ -31,6 +34,7 @@ export default function HomeScreen() {
       <Text testID={TEST_ID.REPORT_OUTPUT} style={styles.report} selectable>
         {reportJson}
       </Text>
+      <StaticGrid active={active} />
     </ScrollView>
   );
 }

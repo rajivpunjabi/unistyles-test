@@ -1,7 +1,6 @@
 /**
  * Subscribes the nested dashboard to the nested metrics store. Emits are
- * throttled inside the store, so this hook re-renders only the dashboard
- * subtree, never the trees it measures.
+ * throttled inside the store, so this re-renders only the dashboard subtree.
  */
 
 import { useSyncExternalStore } from 'react';

@@ -1,12 +1,14 @@
 /**
- * Live leaf-render metrics for the nested screen, one row per tree. Isolated
- * sibling of the trees, so its own re-renders never touch the measured leaves.
+ * Live per-variant re-render metrics for the nested screen. Columns split chain
+ * vs leaf re-renders so a theme toggle (re-renders where theme is consumed) and a
+ * bump (cascades through non-memoized nodes) read differently per variant.
  */
 
 import React from 'react';
 import { Text, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
+import { NEST_VARIANTS } from '@/perf/constants';
 import { useNestedMetrics } from '@/perf/use-nested-metrics';
 
 function NestedDashboard() {
@@ -15,25 +17,26 @@ function NestedDashboard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Leaf renders per tree</Text>
+      <Text style={styles.title}>Re-renders per variant (chain / leaf)</Text>
       <View style={styles.headerRow}>
-        <Text style={[styles.cell, styles.headerText]}>tree</Text>
-        <Text style={[styles.cell, styles.headerText]}>leaves</Text>
-        <Text style={[styles.cell, styles.headerText]}>renders</Text>
-        <Text style={[styles.cell, styles.headerText]}>updates</Text>
-        <Text style={[styles.cell, styles.headerText]}>wasted</Text>
-        <Text style={[styles.cell, styles.headerText]}>ms</Text>
+        <Text style={[styles.cell, styles.nameCell, styles.headerText]}>variant</Text>
+        <Text style={[styles.cell, styles.headerText]}>nodes</Text>
+        <Text style={[styles.cell, styles.headerText]}>chain</Text>
+        <Text style={[styles.cell, styles.headerText]}>leaf</Text>
       </View>
-      {metrics.byTree.map((t) => (
-        <View key={t.tree} style={styles.row} testID={`nested-metrics-${t.tree}`}>
-          <Text style={styles.cell}>T{t.tree}</Text>
-          <Text style={styles.cell}>{t.leafCount}</Text>
-          <Text style={styles.cell}>{t.renderCount}</Text>
-          <Text style={styles.cell}>{t.updateCount}</Text>
-          <Text style={styles.cell}>{t.wastedRenders}</Text>
-          <Text style={styles.cell}>{t.commitMs.toFixed(1)}</Text>
-        </View>
-      ))}
+      {NEST_VARIANTS.map((v) => {
+        const m = metrics.byVariant[v.key];
+        return (
+          <View key={v.key} style={styles.row} testID={`nested-metrics-${v.key}`}>
+            <Text style={[styles.cell, styles.nameCell]}>{v.label}</Text>
+            <Text style={styles.cell}>
+              {m.chainNodes}/{m.leafNodes}
+            </Text>
+            <Text style={styles.cell}>{m.chainRenders}</Text>
+            <Text style={styles.cell}>{m.leafRenders}</Text>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -41,12 +44,12 @@ function NestedDashboard() {
 const stylesheet = createStyleSheet({
   container: {
     padding: 12,
-    gap: 4,
+    gap: 3,
     backgroundColor: '#ffffff',
   },
   title: {
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 4,
     color: '#111111',
   },
@@ -65,6 +68,10 @@ const stylesheet = createStyleSheet({
     fontVariant: ['tabular-nums'],
     textAlign: 'right',
     color: '#111111',
+  },
+  nameCell: {
+    flex: 2.4,
+    textAlign: 'left',
   },
   headerText: {
     fontWeight: '700',

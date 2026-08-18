@@ -11,7 +11,7 @@ import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../constants';
 import { useRenderTracker } from '../use-render-tracker';
 import { BoxContent } from './box-content';
 
-const stylesheet = createStyleSheet((theme) => ({
+const stylesheet = createStyleSheet((theme, runtime) => ({
   box: (hue: number) => ({
     width: 60,
     height: 48,
