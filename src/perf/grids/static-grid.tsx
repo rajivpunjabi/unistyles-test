@@ -86,20 +86,20 @@ function StaticGrid({ colorVariant }: StaticGridProps) {
         </View>
       </PerfProfiler>
 
-      <PerfProfiler category={CATEGORY.VARIANT_THEMED}>
-        <SectionHeader category={CATEGORY.VARIANT_THEMED} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <VariantThemedBox key={i} index={i} colorVariant={colorVariant} />
-          ))}
-        </View>
-      </PerfProfiler>
-
       <PerfProfiler category={CATEGORY.VARIANT_PLAIN}>
         <SectionHeader category={CATEGORY.VARIANT_PLAIN} />
         <View style={styles.section}>
           {INDICES.map((i) => (
             <VariantPlainBox key={i} index={i} colorVariant={colorVariant} />
+          ))}
+        </View>
+      </PerfProfiler>
+
+      <PerfProfiler category={CATEGORY.VARIANT_THEMED}>
+        <SectionHeader category={CATEGORY.VARIANT_THEMED} />
+        <View style={styles.section}>
+          {INDICES.map((i) => (
+            <VariantThemedBox key={i} index={i} colorVariant={colorVariant} />
           ))}
         </View>
       </PerfProfiler>

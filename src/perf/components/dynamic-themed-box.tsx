@@ -20,8 +20,8 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: theme.colors.border,
-    backgroundColor: `hsl(${hue % 360}, 55%, 55%)`,
+    borderColor: `hsl(${hue % 360}, 55%, 55%)`,
+    backgroundColor: theme.colors.element,
   }),
 }));
 

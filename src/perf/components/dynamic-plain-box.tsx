@@ -21,8 +21,8 @@ const stylesheet = createStyleSheet({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: '#555555',
-    backgroundColor: `hsl(${hue % 360}, 55%, 55%)`,
+    borderColor: `hsl(${hue % 360}, 55%, 55%)`,
+    backgroundColor: 'red',
   }),
 });
 
