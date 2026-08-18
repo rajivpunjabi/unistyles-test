@@ -40,16 +40,11 @@ run_one() {
   echo "==> flashlight test ($result_name), $ITERATION_COUNT iterations"
   flashlight test \
     --bundleId "$APP_ID" \
-    --testCommand "npx @perf-profiler/maestro@latest test $FLOW" \
+    --testCommand "maestro test $FLOW" \
     --duration "$DURATION_MS" \
     --iterationCount "$ITERATION_COUNT" \
     --resultsFilePath "$OUT_DIR/${result_name}.json"
 }
-
-# Persistent Maestro session -> "Average test runtime" measures closer to a real
-# TTI (excludes Maestro startup/shutdown). See docs.flashlight.dev/test/maestro.
-echo "==> start Maestro perf session"
-npx @perf-profiler/maestro@latest start-session || true
 
 run_one "$1"
 run_one "$2"
