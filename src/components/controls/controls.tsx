@@ -9,7 +9,7 @@ import { Pressable, Text, View } from 'react-native';
 import { createStyleSheet, UnistylesRuntime, useStyles } from 'react-native-unistyles';
 
 import { TEST_ID } from '@/perf/constants';
-import { toggleActive, useControl } from '@/perf/controls-store';
+import { toggleColorVariant, useVariantStore } from '@/perf/variant-store';
 
 type ControlsProps = {
   running: boolean;
@@ -19,7 +19,7 @@ type ControlsProps = {
 function Controls({ running, onRunBenchmark }: ControlsProps) {
   const { styles } = useStyles(stylesheet);
   const [themeName, setThemeName] = useState<string>(UnistylesRuntime.themeName);
-  const active = useControl((s) => s.active);
+  const colorVariant = useVariantStore((s) => s.colorVariant);
 
   const onToggleTheme = () => {
     UnistylesRuntime.setAdaptiveThemes(false);
@@ -34,8 +34,8 @@ function Controls({ running, onRunBenchmark }: ControlsProps) {
         <Text style={styles.label}>Theme: {themeName}</Text>
       </Pressable>
 
-      <Pressable testID={TEST_ID.VARIANT_TOGGLE} style={styles.button} onPress={toggleActive}>
-        <Text style={styles.label}>Variant: {active ? 'primary' : 'muted'}</Text>
+      <Pressable testID={TEST_ID.VARIANT_TOGGLE} style={styles.button} onPress={toggleColorVariant}>
+        <Text style={styles.label}>Variant: {colorVariant}</Text>
       </Pressable>
 
       <Pressable

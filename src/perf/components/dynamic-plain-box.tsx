@@ -37,7 +37,7 @@ function DynamicPlainBoxComponent({ index, arg }: DynamicPlainBoxProps) {
   renders.current += 1;
   const hue = (index * 7 + arg) % 360;
   const boxStyle = styles.box(hue);
-  useRenderTracker(CATEGORY.DYNAMIC_PLAIN, boxTestId(CATEGORY.DYNAMIC_PLAIN, index), boxStyle);
+  useRenderTracker(CATEGORY.DYNAMIC_PLAIN, renders.current === 1);
 
   return (
     <View testID={boxTestId(CATEGORY.DYNAMIC_PLAIN, index)} style={boxStyle}>

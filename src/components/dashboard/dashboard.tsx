@@ -22,7 +22,6 @@ function Dashboard() {
         <Text style={[styles.cell, styles.nameCell, styles.headerText]}>category</Text>
         <Text style={[styles.cell, styles.headerText]}>rndr</Text>
         <Text style={[styles.cell, styles.headerText]}>upd</Text>
-        <Text style={[styles.cell, styles.headerText]}>wasted</Text>
         <Text style={[styles.cell, styles.headerText]}>mnt ms</Text>
         <Text style={[styles.cell, styles.headerText]}>upd ms</Text>
       </View>
@@ -33,7 +32,6 @@ function Dashboard() {
             <Text style={[styles.cell, styles.nameCell]}>{category}</Text>
             <Text style={styles.cell}>{m.renderCount}</Text>
             <Text style={styles.cell}>{m.updateCount}</Text>
-            <Text style={styles.cell}>{m.wastedRenders}</Text>
             <Text style={styles.cell}>{m.mountDurationMs.toFixed(1)}</Text>
             <Text style={styles.cell}>{m.updateDurationMs.toFixed(1)}</Text>
           </View>

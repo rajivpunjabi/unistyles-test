@@ -15,14 +15,11 @@ function createEmptyVariant(key: NestVariantKey): VariantMetrics {
     leafNodes: 0,
     chainRenders: 0,
     leafRenders: 0,
-    chainWasted: 0,
-    leafWasted: 0,
   };
 }
 
 class NestedMetricsStore {
   private byVariant: Record<NestVariantKey, VariantMetrics>;
-  private lastStyleRef: Map<string, unknown>;
   private listeners: Set<() => void>;
   private snapshot: NestedSnapshot;
   private dirty: boolean;
@@ -30,7 +27,6 @@ class NestedMetricsStore {
 
   constructor() {
     this.byVariant = this.freshVariants();
-    this.lastStyleRef = new Map();
     this.listeners = new Set();
     this.dirty = true;
     this.emitScheduled = false;
@@ -46,10 +42,8 @@ class NestedMetricsStore {
     return next;
   }
 
-  recordRender(key: NestVariantKey, part: NestPart, instanceId: string, styleRef: unknown) {
+  recordRender(key: NestVariantKey, part: NestPart, isMount: boolean) {
     const metrics = this.byVariant[key];
-    const previousRef = this.lastStyleRef.get(instanceId);
-    const isMount = previousRef === undefined;
     const isChain = part === NEST_PART.CHAIN;
 
     if (isMount) {
@@ -58,27 +52,16 @@ class NestedMetricsStore {
       } else {
         metrics.leafNodes += 1;
       }
+    } else if (isChain) {
+      metrics.chainRenders += 1;
     } else {
-      const wasted = previousRef === styleRef;
-      if (isChain) {
-        metrics.chainRenders += 1;
-        if (wasted) {
-          metrics.chainWasted += 1;
-        }
-      } else {
-        metrics.leafRenders += 1;
-        if (wasted) {
-          metrics.leafWasted += 1;
-        }
-      }
+      metrics.leafRenders += 1;
     }
-    this.lastStyleRef.set(instanceId, styleRef);
     this.markDirty();
   }
 
   reset() {
     this.byVariant = this.freshVariants();
-    this.lastStyleRef.clear();
     this.markDirty();
     this.emit();
   }

@@ -19,13 +19,11 @@ function createEmptyCategory(category: Category): CategoryMetrics {
     mountDurationMs: 0,
     updateDurationMs: 0,
     lastRenderAt: 0,
-    wastedRenders: 0,
   };
 }
 
 class MetricsStore {
   private byCategory: Record<Category, CategoryMetrics>;
-  private lastStyleRef: Map<string, unknown>;
   private listeners: Set<() => void>;
   private snapshot: MetricsSnapshot;
   private dirty: boolean;
@@ -33,7 +31,6 @@ class MetricsStore {
 
   constructor() {
     this.byCategory = this.freshCategories();
-    this.lastStyleRef = new Map();
     this.listeners = new Set();
     this.dirty = true;
     this.emitScheduled = false;
@@ -49,10 +46,8 @@ class MetricsStore {
     return next;
   }
 
-  recordRender(category: Category, instanceId: string, styleRef: unknown) {
+  recordRender(category: Category, isMount: boolean) {
     const metrics = this.byCategory[category];
-    const previousRef = this.lastStyleRef.get(instanceId);
-    const isMount = previousRef === undefined;
 
     metrics.renderCount += 1;
     metrics.lastRenderAt = Date.now();
@@ -60,11 +55,7 @@ class MetricsStore {
       metrics.mountCount += 1;
     } else {
       metrics.updateCount += 1;
-      if (previousRef === styleRef) {
-        metrics.wastedRenders += 1;
-      }
     }
-    this.lastStyleRef.set(instanceId, styleRef);
     this.markDirty();
   }
 
@@ -80,7 +71,6 @@ class MetricsStore {
 
   reset() {
     this.byCategory = this.freshCategories();
-    this.lastStyleRef.clear();
     this.markDirty();
     this.emit();
   }

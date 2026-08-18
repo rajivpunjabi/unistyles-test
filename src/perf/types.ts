@@ -16,7 +16,6 @@ type CategoryMetrics = {
   mountDurationMs: number;
   updateDurationMs: number;
   lastRenderAt: number;
-  wastedRenders: number;
 };
 
 type MetricsSnapshot = {
@@ -49,8 +48,6 @@ type VariantMetrics = {
   leafNodes: number;
   chainRenders: number;
   leafRenders: number;
-  chainWasted: number;
-  leafWasted: number;
 };
 
 type NestedSnapshot = {

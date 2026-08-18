@@ -18,6 +18,7 @@ import {
 import { CATEGORY, CATEGORY_SHORT, INSTANCE_COUNT } from '../constants';
 import { PerfProfiler } from '../perf-profiler';
 import type { Category } from '../types';
+import type { ColorVariant } from '../variant-store';
 
 const INDICES = Array.from({ length: INSTANCE_COUNT }, (_, i) => i);
 
@@ -41,10 +42,10 @@ function SectionHeader({ category }: { category: Category }) {
 }
 
 type StaticGridProps = {
-  active: boolean;
+  colorVariant: ColorVariant;
 };
 
-function StaticGrid({ active }: StaticGridProps) {
+function StaticGrid({ colorVariant }: StaticGridProps) {
   const { styles } = useStyles(stylesheet);
 
   return (
@@ -89,7 +90,7 @@ function StaticGrid({ active }: StaticGridProps) {
         <SectionHeader category={CATEGORY.VARIANT_THEMED} />
         <View style={styles.section}>
           {INDICES.map((i) => (
-            <VariantThemedBox key={i} index={i} active={active} />
+            <VariantThemedBox key={i} index={i} colorVariant={colorVariant} />
           ))}
         </View>
       </PerfProfiler>
@@ -98,7 +99,7 @@ function StaticGrid({ active }: StaticGridProps) {
         <SectionHeader category={CATEGORY.VARIANT_PLAIN} />
         <View style={styles.section}>
           {INDICES.map((i) => (
-            <VariantPlainBox key={i} index={i} active={active} />
+            <VariantPlainBox key={i} index={i} colorVariant={colorVariant} />
           ))}
         </View>
       </PerfProfiler>

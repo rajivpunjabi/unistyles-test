@@ -9,6 +9,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../constants';
 import { useRenderTracker } from '../use-render-tracker';
+import type { ColorVariant } from '../variant-store';
 import { BoxContent } from './box-content';
 
 const stylesheet = createStyleSheet({
@@ -34,17 +35,17 @@ const stylesheet = createStyleSheet({
 
 type VariantPlainBoxProps = {
   index: number;
-  active: boolean;
+  colorVariant: ColorVariant;
 };
 
-function VariantPlainBoxComponent({ index, active }: VariantPlainBoxProps) {
+function VariantPlainBoxComponent({ index, colorVariant }: VariantPlainBoxProps) {
   const { styles } = useStyles(stylesheet, {
-    color: active ? 'primary' : 'muted',
+    color: colorVariant,
     size: index % 2 === 0 ? 'small' : 'large',
   });
   const renders = useRef(0);
   renders.current += 1;
-  useRenderTracker(CATEGORY.VARIANT_PLAIN, boxTestId(CATEGORY.VARIANT_PLAIN, index), styles.box);
+  useRenderTracker(CATEGORY.VARIANT_PLAIN, renders.current === 1);
 
   return (
     <View testID={boxTestId(CATEGORY.VARIANT_PLAIN, index)} style={styles.box}>

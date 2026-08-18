@@ -34,7 +34,7 @@ function StaticBoxComponent({ index }: StaticBoxProps) {
   const { styles } = useStyles(stylesheet);
   const renders = useRef(0);
   renders.current += 1;
-  useRenderTracker(CATEGORY.STATIC, boxTestId(CATEGORY.STATIC, index), styles.box);
+  useRenderTracker(CATEGORY.STATIC, renders.current === 1);
 
   return (
     <View testID={boxTestId(CATEGORY.STATIC, index)} style={styles.box}>

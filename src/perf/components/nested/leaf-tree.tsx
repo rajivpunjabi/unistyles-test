@@ -10,7 +10,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from 'react-native-unistyles';
 
-import { NEST_BRANCHING, NEST_PART, nestTestId } from '../../constants';
+import { NEST_BRANCHING, NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
 import { useNestedRenderTracker } from '../../use-nested-render-tracker';
 import { BoxContent } from '../box-content';
@@ -28,7 +28,7 @@ function LeafLeaf({ index }: { index: number }) {
   const { styles } = useStyles(leafThemedSheet);
   const renders = React.useRef(0);
   renders.current += 1;
-  useNestedRenderTracker(KEY, NEST_PART.LEAF, nestTestId(KEY, NEST_PART.LEAF, index), styles.leaf);
+  useNestedRenderTracker(KEY, NEST_PART.LEAF, renders.current === 1);
 
   return (
     <View style={styles.leaf}>
@@ -40,12 +40,7 @@ function LeafLeaf({ index }: { index: number }) {
 function LeafChain({ level, index }: { level: number; index: number }) {
   const renders = React.useRef(0);
   renders.current += 1;
-  useNestedRenderTracker(
-    KEY,
-    NEST_PART.CHAIN,
-    nestTestId(KEY, NEST_PART.CHAIN, level * 100 + index),
-    PLAIN_CHAIN_STYLE,
-  );
+  useNestedRenderTracker(KEY, NEST_PART.CHAIN, renders.current === 1);
 
   const childLevel = level + 1;
   const childIsLeaf = childLevel >= LAST_LEVEL;

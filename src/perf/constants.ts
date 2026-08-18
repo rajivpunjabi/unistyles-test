@@ -93,10 +93,6 @@ function boxTestId(category: string, index: number) {
   return `${category}-${index}`;
 }
 
-function nestTestId(variantKey: string, part: string, index: number) {
-  return `${variantKey}-${part}-${index}`;
-}
-
 export {
   boxTestId,
   CATEGORY,
@@ -109,7 +105,6 @@ export {
   NEST_PART,
   NEST_VARIANT_KEYS,
   NEST_VARIANTS,
-  nestTestId,
   TEST_ID,
   THEME_TOGGLE_COUNT,
   THEME_TOGGLE_DELAY_MS,

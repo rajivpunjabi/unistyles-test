@@ -36,7 +36,7 @@ function DynamicThemedBoxComponent({ index, arg }: DynamicThemedBoxProps) {
   renders.current += 1;
   const hue = (index * 7 + arg) % 360;
   const boxStyle = styles.box(hue);
-  useRenderTracker(CATEGORY.DYNAMIC_THEMED, boxTestId(CATEGORY.DYNAMIC_THEMED, index), boxStyle);
+  useRenderTracker(CATEGORY.DYNAMIC_THEMED, renders.current === 1);
 
   return (
     <View testID={boxTestId(CATEGORY.DYNAMIC_THEMED, index)} style={boxStyle}>

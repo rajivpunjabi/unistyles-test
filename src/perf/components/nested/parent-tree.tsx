@@ -10,7 +10,7 @@ import React, { memo } from 'react';
 import { View } from 'react-native';
 import { useStyles } from 'react-native-unistyles';
 
-import { NEST_BRANCHING, NEST_PART, nestTestId } from '../../constants';
+import { NEST_BRANCHING, NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
 import { useNestedRenderTracker } from '../../use-nested-render-tracker';
 import { BoxContent } from '../box-content';
@@ -27,12 +27,7 @@ const KEY: NestVariantKey = 'parent-memo';
 const ParentLeaf = memo(function ParentLeaf({ index }: { index: number }) {
   const renders = React.useRef(0);
   renders.current += 1;
-  useNestedRenderTracker(
-    KEY,
-    NEST_PART.LEAF,
-    nestTestId(KEY, NEST_PART.LEAF, index),
-    PLAIN_LEAF_STYLE,
-  );
+  useNestedRenderTracker(KEY, NEST_PART.LEAF, renders.current === 1);
 
   return (
     <View style={PLAIN_LEAF_STYLE}>
@@ -45,12 +40,7 @@ const ParentChain = memo(function ParentChain({ level, index }: { level: number;
   const { styles } = useStyles(chainThemedSheet);
   const renders = React.useRef(0);
   renders.current += 1;
-  useNestedRenderTracker(
-    KEY,
-    NEST_PART.CHAIN,
-    nestTestId(KEY, NEST_PART.CHAIN, level * 100 + index),
-    styles.node,
-  );
+  useNestedRenderTracker(KEY, NEST_PART.CHAIN, renders.current === 1);
 
   const childLevel = level + 1;
   const childIsLeaf = childLevel >= LAST_LEVEL;

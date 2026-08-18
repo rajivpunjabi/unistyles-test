@@ -33,7 +33,7 @@ function ThemedBoxComponent({ index }: ThemedBoxProps) {
   const { styles } = useStyles(stylesheet);
   const renders = useRef(0);
   renders.current += 1;
-  useRenderTracker(CATEGORY.THEMED, boxTestId(CATEGORY.THEMED, index), styles.box);
+  useRenderTracker(CATEGORY.THEMED, renders.current === 1);
 
   return (
     <View testID={boxTestId(CATEGORY.THEMED, index)} style={styles.box}>
