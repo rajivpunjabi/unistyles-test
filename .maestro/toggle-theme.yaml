@@ -1,0 +1,18 @@
+# Toggle-theme perf flow for Flashlight.
+# Toggles the theme 5x on the Static screen, then 5x on the Nested screen.
+# Same testIDs on the v2 and v3 branches so the two APKs run the identical flow.
+appId: com.anonymous.unistylesperf
+---
+- launchApp:
+    clearState: true
+- repeat:
+    times: 5
+    commands:
+      - tapOn:
+          id: 'control-theme-toggle'
+- tapOn: 'Nested'
+- repeat:
+    times: 5
+    commands:
+      - tapOn:
+          id: 'nested-theme'
