@@ -19,6 +19,9 @@ export default function AppTabs() {
           <TabTrigger name="static" href="/static" asChild>
             <TabButton>Static</TabButton>
           </TabTrigger>
+          <TabTrigger name="nested" href="/nested" asChild>
+            <TabButton>Nested</TabButton>
+          </TabTrigger>
         </CustomTabList>
       </TabList>
     </Tabs>

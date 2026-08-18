@@ -39,6 +39,21 @@ type RunReport = {
   finalSnapshot: MetricsSnapshot;
 };
 
+type TreeMetrics = {
+  tree: number;
+  leafCount: number;
+  renderCount: number;
+  mountCount: number;
+  updateCount: number;
+  wastedRenders: number;
+  commitMs: number;
+};
+
+type NestedSnapshot = {
+  byTree: TreeMetrics[];
+  updatedAt: number;
+};
+
 export type {
   Category,
   RenderPhase,
@@ -46,4 +61,6 @@ export type {
   MetricsSnapshot,
   ThemeSwitchResult,
   RunReport,
+  TreeMetrics,
+  NestedSnapshot,
 };
