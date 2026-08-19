@@ -1,6 +1,6 @@
 # Toggle-theme perf flow for Flashlight (paced).
 # Taps the theme toggle 10x on the Static screen, then 10x on the Nested screen,
-# with a 200ms delay between taps (tapOn repeat/delay). Same testIDs on the v2
+# with a 300ms delay between taps (tapOn repeat/delay). Same testIDs on the v2
 # and v3 branches so the two APKs run the identical flow.
 #
 # waitToSettleTimeoutMs: 0 -> don't wait for the UI to go idle after a tap. On v2
@@ -16,7 +16,7 @@ appId: com.anonymous.unistylesperf
 - tapOn:
     id: 'control-theme-toggle'
     repeat: 10
-    delay: 200
+    delay: 300
     waitToSettleTimeoutMs: 0
 - tapOn:
     text: 'Nested'
@@ -28,5 +28,5 @@ appId: com.anonymous.unistylesperf
 - tapOn:
     id: 'nested-theme'
     repeat: 10
-    delay: 200
+    delay: 300
     waitToSettleTimeoutMs: 0

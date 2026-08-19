@@ -1,0 +1,31 @@
+# Toggle-theme flow using the OLD approach: a flow-level `repeat` that re-locates
+# the element (fresh hierarchy dump/search) before every tap. Kept for comparison
+# against toggle-theme.yaml, which uses `tapOn { repeat }` to resolve the element
+# once. On a large view tree this version is much slower (one dump per tap).
+# Same testIDs on the v2 and v3 branches.
+appId: com.anonymous.unistylesperf
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'control-theme-toggle'
+    timeout: 30000
+- repeat:
+    times: 10
+    commands:
+      - tapOn:
+          id: 'control-theme-toggle'
+          waitToSettleTimeoutMs: 0
+- tapOn:
+    text: 'Nested'
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible:
+      id: 'nested-theme'
+    timeout: 30000
+- repeat:
+    times: 10
+    commands:
+      - tapOn:
+          id: 'nested-theme'
+          waitToSettleTimeoutMs: 0

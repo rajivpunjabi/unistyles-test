@@ -49,27 +49,21 @@ function StaticGrid({ colorVariant }: StaticGridProps) {
   const { styles } = useStyles(stylesheet);
 
   return (
-    // Hidden from the accessibility tree so Maestro doesn't traverse the hundreds
-    // of box nodes when locating controls — the boxes still render (measured).
-    <View
-      style={styles.content}
-      importantForAccessibility="no-hide-descendants"
-      accessibilityElementsHidden
-    >
-      <PerfProfiler category={CATEGORY.THEMED}>
-        <SectionHeader category={CATEGORY.THEMED} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <ThemedBox key={i} index={i} />
-          ))}
-        </View>
-      </PerfProfiler>
-
+    <View style={styles.content}>
       <PerfProfiler category={CATEGORY.STATIC}>
         <SectionHeader category={CATEGORY.STATIC} />
         <View style={styles.section}>
           {INDICES.map((i) => (
             <StaticBox key={i} index={i} />
+          ))}
+        </View>
+      </PerfProfiler>
+
+      <PerfProfiler category={CATEGORY.THEMED}>
+        <SectionHeader category={CATEGORY.THEMED} />
+        <View style={styles.section}>
+          {INDICES.map((i) => (
+            <ThemedBox key={i} index={i} />
           ))}
         </View>
       </PerfProfiler>
