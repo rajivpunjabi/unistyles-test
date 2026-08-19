@@ -43,6 +43,7 @@ run_one() {
     --testCommand "maestro test $FLOW" \
     --duration "$DURATION_MS" \
     --iterationCount "$ITERATION_COUNT" \
+    --resultsTitle "$result_name" \
     --resultsFilePath "$OUT_DIR/${result_name}.json"
 }
 
@@ -51,6 +52,10 @@ run_one "$2"
 
 R1="$OUT_DIR/$(basename "$1" .apk).json"
 R2="$OUT_DIR/$(basename "$2" .apk).json"
+
+SUMMARY="$OUT_DIR/summary.md"
+echo "==> summarize (markdown -> $SUMMARY)"
+node "$ROOT/scripts/summarize.js" "$R1" "$R2" "$SUMMARY"
 
 echo "==> flashlight report (comparison)"
 flashlight report "$R1" "$R2"
