@@ -17,7 +17,7 @@ OUT_DIR="$ROOT/outputs"
 FLOW="$ROOT/.maestro/toggle-theme.yaml"
 APP_ID="$(node -e "console.log(require('./app.json').expo.android.package)")"
 ITERATION_COUNT=10
-DURATION_MS=20000
+DURATION_MS=8000
 
 if [ "$#" -ne 2 ]; then
   echo "usage: yarn measure <apk1> <apk2>  (names inside ./outputs)"

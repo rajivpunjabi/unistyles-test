@@ -38,7 +38,10 @@ export default function NestedScreen() {
         return (
           <View key={key}>
             <TreeHeader label={label} />
-            <Tree />
+            {/* Hidden from a11y so Maestro doesn't traverse the tree nodes. */}
+            <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+              <Tree />
+            </View>
           </View>
         );
       })}
