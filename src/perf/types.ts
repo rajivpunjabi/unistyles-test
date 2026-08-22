@@ -24,24 +24,6 @@ type MetricsSnapshot = {
   updatedAt: number;
 };
 
-type ThemeSwitchResult = {
-  fromTheme: string;
-  toTheme: string;
-  rerenderedCategories: Category[];
-  totalRerenders: number;
-  commitDurationMs: number;
-};
-
-type RunReport = {
-  library: string;
-  instanceCount: number;
-  startedAt: number;
-  finishedAt: number;
-  mountSnapshot: MetricsSnapshot;
-  themeSwitches: ThemeSwitchResult[];
-  finalSnapshot: MetricsSnapshot;
-};
-
 type VariantMetrics = {
   key: NestVariantKey;
   chainNodes: number;
@@ -62,8 +44,6 @@ export type {
   RenderPhase,
   CategoryMetrics,
   MetricsSnapshot,
-  ThemeSwitchResult,
-  RunReport,
   VariantMetrics,
   NestedSnapshot,
 };

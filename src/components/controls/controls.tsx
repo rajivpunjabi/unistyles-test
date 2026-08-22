@@ -1,7 +1,6 @@
 /**
- * Benchmark controls hosted on the Home screen: manual theme toggle, variant
- * toggle, and the scripted run button. Every control carries a stable testID
- * for Maestro.
+ * Controls hosted on the Home screen: manual theme toggle and variant toggle.
+ * Every control carries a stable testID for Maestro.
  */
 
 import React, { useState } from 'react';
@@ -11,12 +10,7 @@ import { createStyleSheet, UnistylesRuntime, useStyles } from 'react-native-unis
 import { TEST_ID } from '@/perf/constants';
 import { toggleColorVariant, useVariantStore } from '@/perf/variant-store';
 
-type ControlsProps = {
-  running: boolean;
-  onRunBenchmark: () => void;
-};
-
-function Controls({ running, onRunBenchmark }: ControlsProps) {
+function Controls() {
   const { styles } = useStyles(stylesheet);
   const [themeName, setThemeName] = useState<string>(UnistylesRuntime.themeName);
   const colorVariant = useVariantStore((s) => s.colorVariant);
@@ -37,14 +31,6 @@ function Controls({ running, onRunBenchmark }: ControlsProps) {
       <Pressable testID={TEST_ID.VARIANT_TOGGLE} style={styles.button} onPress={toggleColorVariant}>
         <Text style={styles.label}>Variant: {colorVariant}</Text>
       </Pressable>
-
-      <Pressable
-        testID={TEST_ID.RUN_BENCHMARK}
-        style={[styles.button, styles.primary, running && styles.disabled]}
-        disabled={running}
-        onPress={onRunBenchmark}>
-        <Text style={styles.label}>{running ? 'Running…' : 'Run benchmark'}</Text>
-      </Pressable>
     </View>
   );
 }
@@ -59,12 +45,6 @@ const stylesheet = createStyleSheet({
     paddingHorizontal: 16,
     borderRadius: 8,
     backgroundColor: '#2b2f31',
-  },
-  primary: {
-    backgroundColor: '#3b6cff',
-  },
-  disabled: {
-    opacity: 0.5,
   },
   label: {
     color: '#ffffff',

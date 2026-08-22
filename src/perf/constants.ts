@@ -74,15 +74,10 @@ const NEST_TREE_REPLICA_COUNT = 3;
 
 const NEST_TREE_REPLICAS = Array.from({ length: NEST_TREE_REPLICA_COUNT }, (_, i) => i);
 
-const THEME_TOGGLE_COUNT = 5;
-
-const THEME_TOGGLE_DELAY_MS = 600;
-
 const DASHBOARD_THROTTLE_MS = 250;
 
 const TEST_ID = {
   THEME_TOGGLE: 'control-theme-toggle',
-  RUN_BENCHMARK: 'control-run-benchmark',
   VARIANT_TOGGLE: 'control-variant-toggle',
   TAB_HOME: 'tab-home',
   TAB_STATIC: 'tab-static',
@@ -90,7 +85,6 @@ const TEST_ID = {
   NESTED_THEME: 'nested-theme',
   NESTED_BUMP: 'nested-bump',
   NESTED_RESET: 'nested-reset',
-  REPORT_OUTPUT: 'report-output',
 } as const;
 
 function boxTestId(category: string, index: number) {
@@ -111,6 +105,4 @@ export {
   NEST_VARIANT_KEYS,
   NEST_VARIANTS,
   TEST_ID,
-  THEME_TOGGLE_COUNT,
-  THEME_TOGGLE_DELAY_MS,
 };

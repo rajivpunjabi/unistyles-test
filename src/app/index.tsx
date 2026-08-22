@@ -1,39 +1,20 @@
-import React, { useState } from 'react';
-import { ScrollView, Text } from 'react-native';
+import React from 'react';
+import { ScrollView } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Controls } from '@/components/controls';
 import { Dashboard } from '@/components/dashboard';
-import { runBenchmark } from '@/perf/benchmark';
-import { TEST_ID } from '@/perf/constants';
-import { exportReport, toJson } from '@/perf/export';
 import { StaticGrid } from '@/perf/grids/static-grid';
 import { useVariantStore } from '@/perf/variant-store';
 
 export default function StaticScreen() {
   const { styles } = useStyles(stylesheet);
   const colorVariant = useVariantStore((s) => s.colorVariant);
-  const [running, setRunning] = useState(false);
-  const [reportJson, setReportJson] = useState('');
-
-  const onRunBenchmark = async () => {
-    setRunning(true);
-    try {
-      const report = await runBenchmark();
-      setReportJson(toJson(report));
-      await exportReport(report);
-    } finally {
-      setRunning(false);
-    }
-  };
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <Controls running={running} onRunBenchmark={onRunBenchmark} />
+      <Controls />
       <Dashboard />
-      <Text testID={TEST_ID.REPORT_OUTPUT} style={styles.report} selectable>
-        {reportJson}
-      </Text>
       <StaticGrid colorVariant={colorVariant} />
     </ScrollView>
   );
@@ -47,11 +28,5 @@ const stylesheet = createStyleSheet({
   content: {
     paddingTop: 48,
     paddingBottom: 120,
-  },
-  report: {
-    padding: 12,
-    fontSize: 10,
-    fontFamily: 'monospace',
-    color: '#333333',
   },
 });
