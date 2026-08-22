@@ -18,7 +18,6 @@ export default function NestedScreen() {
   const [bump, setBump] = useState(0);
 
   const onToggleTheme = () => {
-    UnistylesRuntime.setAdaptiveThemes(false);
     UnistylesRuntime.setTheme(UnistylesRuntime.themeName === 'dark' ? 'light' : 'dark');
   };
 

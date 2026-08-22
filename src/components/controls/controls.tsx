@@ -16,7 +16,6 @@ function Controls() {
   const colorVariant = useVariantStore((s) => s.colorVariant);
 
   const onToggleTheme = () => {
-    UnistylesRuntime.setAdaptiveThemes(false);
     const next = UnistylesRuntime.themeName === 'dark' ? 'light' : 'dark';
     UnistylesRuntime.setTheme(next);
     setThemeName(next);

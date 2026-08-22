@@ -28,5 +28,6 @@ UnistylesRegistry.addBreakpoints(breakpoints)
     dark: darkTheme,
   })
   .addConfig({
-    adaptiveThemes: true,
+    adaptiveThemes: false,
+    initialTheme: 'light',
   });
