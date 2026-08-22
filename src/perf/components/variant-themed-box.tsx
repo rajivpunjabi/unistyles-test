@@ -10,7 +10,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../constants';
 import { useRenderTracker } from '../use-render-tracker';
-import type { ColorVariant } from '../variant-store';
+import { useVariantStore } from '../variant-store';
 import { BoxContent } from './box-content';
 
 const stylesheet = createStyleSheet((theme) => ({
@@ -36,10 +36,10 @@ const stylesheet = createStyleSheet((theme) => ({
 
 type VariantThemedBoxProps = {
   index: number;
-  colorVariant: ColorVariant;
 };
 
-function VariantThemedBoxComponent({ index, colorVariant }: VariantThemedBoxProps) {
+function VariantThemedBoxComponent({ index }: VariantThemedBoxProps) {
+  const colorVariant = useVariantStore((s) => s.colorVariant);
   const { styles } = useStyles(stylesheet, {
     color: colorVariant,
     size: index % 2 === 0 ? 'small' : 'large',
