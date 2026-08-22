@@ -41,22 +41,22 @@ function NestedDashboard() {
   );
 }
 
-const stylesheet = createStyleSheet({
+const stylesheet = createStyleSheet((theme) => ({
   container: {
     padding: 12,
     gap: 3,
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.colors.background,
   },
   title: {
     fontWeight: '700',
     fontSize: 14,
     marginBottom: 4,
-    color: '#111111',
+    color: theme.colors.text,
   },
   headerRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderColor: '#8888',
+    borderColor: theme.colors.border,
     paddingBottom: 2,
   },
   row: {
@@ -67,7 +67,7 @@ const stylesheet = createStyleSheet({
     fontSize: 12,
     fontVariant: ['tabular-nums'],
     textAlign: 'right',
-    color: '#111111',
+    color: theme.colors.text,
   },
   nameCell: {
     flex: 2.4,
@@ -76,6 +76,6 @@ const stylesheet = createStyleSheet({
   headerText: {
     fontWeight: '700',
   },
-});
+}));
 
 export { NestedDashboard };
