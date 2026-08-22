@@ -70,6 +70,10 @@ const NEST_VARIANTS = [
 
 const NEST_VARIANT_KEYS = NEST_VARIANTS.map((v) => v.key);
 
+const NEST_TREE_REPLICA_COUNT = 3;
+
+const NEST_TREE_REPLICAS = Array.from({ length: NEST_TREE_REPLICA_COUNT }, (_, i) => i);
+
 const THEME_TOGGLE_COUNT = 5;
 
 const THEME_TOGGLE_DELAY_MS = 600;
@@ -103,6 +107,7 @@ export {
   NEST_BRANCHING,
   NEST_DEPTH,
   NEST_PART,
+  NEST_TREE_REPLICAS,
   NEST_VARIANT_KEYS,
   NEST_VARIANTS,
   TEST_ID,

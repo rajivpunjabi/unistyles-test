@@ -4,7 +4,7 @@ import { UnistylesRuntime } from 'react-native-unistyles';
 
 import { NestedDashboard } from '@/components/dashboard';
 import { NESTED_TREE_BY_KEY, NestedControls, TreeHeader } from '@/perf/components/nested';
-import { NEST_VARIANTS } from '@/perf/constants';
+import { NEST_TREE_REPLICAS, NEST_VARIANTS } from '@/perf/constants';
 import { nestedMetricsStore } from '@/perf/nested-metrics-store';
 
 /**
@@ -35,12 +35,12 @@ export default function NestedScreen() {
 
       {NEST_VARIANTS.map(({ key, label }) => {
         const Tree = NESTED_TREE_BY_KEY[key];
-        return (
-          <View key={key}>
+        return NEST_TREE_REPLICAS.map((replica) => (
+          <View key={`${key}-${replica}`}>
             <TreeHeader label={label} />
             <Tree />
           </View>
-        );
+        ));
       })}
     </ScrollView>
   );
