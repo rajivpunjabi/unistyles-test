@@ -5,7 +5,7 @@
 
 import React, { Profiler, type ReactNode } from 'react';
 
-import { metricsStore } from './metrics-store';
+import { metricsStore } from './stores/metrics-store';
 import type { Category } from './types';
 
 type PerfProfilerProps = {

@@ -9,7 +9,7 @@ import { Text, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { NEST_VARIANTS } from '@/perf/constants';
-import { useNestedMetrics } from '@/perf/use-nested-metrics';
+import { useNestedMetrics } from '@/perf/hooks';
 
 function NestedDashboard() {
   const { styles } = useStyles(stylesheet);
@@ -20,7 +20,6 @@ function NestedDashboard() {
       <Text style={styles.title}>Re-renders per variant (chain / leaf)</Text>
       <View style={styles.headerRow}>
         <Text style={[styles.cell, styles.nameCell, styles.headerText]}>variant</Text>
-        <Text style={[styles.cell, styles.headerText]}>nodes</Text>
         <Text style={[styles.cell, styles.headerText]}>chain</Text>
         <Text style={[styles.cell, styles.headerText]}>leaf</Text>
       </View>
@@ -29,9 +28,6 @@ function NestedDashboard() {
         return (
           <View key={v.key} style={styles.row} testID={`nested-metrics-${v.key}`}>
             <Text style={[styles.cell, styles.nameCell]}>{v.label}</Text>
-            <Text style={styles.cell}>
-              {m.chainNodes}/{m.leafNodes}
-            </Text>
             <Text style={styles.cell}>{m.chainRenders}</Text>
             <Text style={styles.cell}>{m.leafRenders}</Text>
           </View>

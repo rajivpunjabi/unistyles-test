@@ -5,7 +5,7 @@
 
 import { useSyncExternalStore } from 'react';
 
-import { nestedMetricsStore } from './nested-metrics-store';
+import { nestedMetricsStore } from '../stores/nested-metrics-store';
 
 function useNestedMetrics() {
   return useSyncExternalStore(nestedMetricsStore.subscribe, nestedMetricsStore.getSnapshot);

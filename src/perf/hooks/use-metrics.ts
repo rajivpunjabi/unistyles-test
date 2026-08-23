@@ -5,7 +5,7 @@
 
 import { useSyncExternalStore } from 'react';
 
-import { metricsStore } from './metrics-store';
+import { metricsStore } from '../stores/metrics-store';
 
 function useMetrics() {
   return useSyncExternalStore(metricsStore.subscribe, metricsStore.getSnapshot);

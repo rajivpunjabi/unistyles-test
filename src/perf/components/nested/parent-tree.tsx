@@ -10,27 +10,27 @@ import React, { memo } from 'react';
 import { View } from 'react-native';
 import { useStyles } from 'react-native-unistyles';
 
-import { NEST_BRANCHING, NEST_PART } from '../../constants';
+import { NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
-import { useNestedRenderTracker } from '../../use-nested-render-tracker';
+import { useNestedRenderTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 import { CHILD_INDICES, LAST_LEVEL, chainThemedSheet, plainStyles } from './nested-styles';
 
 const KEY: NestVariantKey = 'parent-memo';
 
-const ParentLeaf = memo(function ParentLeaf({ index }: { index: number }) {
+const ParentLeaf = memo(function ParentLeaf({ level }: { level: number }) {
   const renders = React.useRef(0);
   renders.current += 1;
   useNestedRenderTracker(KEY, NEST_PART.LEAF, renders.current === 1);
 
   return (
     <View style={plainStyles.plainLeaf}>
-      <BoxContent label={`L${index}`} count={renders.current} />
+      <BoxContent label={`L${level}`} count={renders.current} />
     </View>
   );
 });
 
-const ParentChain = memo(function ParentChain({ level, index }: { level: number; index: number }) {
+const ParentChain = memo(function ParentChain({ level }: { level: number }) {
   const { styles } = useStyles(chainThemedSheet);
   const renders = React.useRef(0);
   renders.current += 1;
@@ -43,21 +43,20 @@ const ParentChain = memo(function ParentChain({ level, index }: { level: number;
     <View style={styles.node}>
       <BoxContent label={`C${level}`} count={renders.current} />
       <View style={plainStyles.childrenRow}>
-        {CHILD_INDICES.map((c) => {
-          const childIndex = index * NEST_BRANCHING + c;
-          return childIsLeaf ? (
-            <ParentLeaf key={c} index={childIndex} />
+        {CHILD_INDICES.map((c) =>
+          childIsLeaf ? (
+            <ParentLeaf key={c} level={childLevel} />
           ) : (
-            <ParentChain key={c} level={childLevel} index={childIndex} />
-          );
-        })}
+            <ParentChain key={c} level={childLevel} />
+          ),
+        )}
       </View>
     </View>
   );
 });
 
 function ParentTree() {
-  return <ParentChain level={0} index={0} />;
+  return <ParentChain level={0} />;
 }
 
 export { ParentTree };

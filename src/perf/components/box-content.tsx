@@ -1,7 +1,6 @@
 /**
  * In-box overlay showing the category short-code and the box's live render
- * count. Rendered in a dark translucent pill so it stays legible on any theme
- * background.
+ * count. Rendered in a themed pill so it stays legible on any theme background.
  */
 
 import React from 'react';
@@ -13,9 +12,9 @@ type BoxContentProps = {
   count: number;
 };
 
-const stylesheet = createStyleSheet({
+const stylesheet = createStyleSheet((theme) => ({
   pill: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: theme.colors.background,
     borderRadius: 4,
     paddingHorizontal: 3,
     paddingVertical: 1,
@@ -23,17 +22,17 @@ const stylesheet = createStyleSheet({
     justifyContent: 'center',
   },
   label: {
-    color: '#ffffff',
+    color: theme.colors.text,
     fontSize: 8,
     fontWeight: '700',
   },
   count: {
-    color: '#ffffff',
+    color: theme.colors.text,
     fontSize: 12,
     fontWeight: '700',
     fontVariant: ['tabular-nums'],
   },
-});
+}));
 
 function BoxContent({ label, count }: BoxContentProps) {
   const { styles } = useStyles(stylesheet);

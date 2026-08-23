@@ -8,7 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import { createStyleSheet, UnistylesRuntime, useStyles } from 'react-native-unistyles';
 
 import { TEST_ID } from '@/perf/constants';
-import { toggleColorVariant, useVariantStore } from '@/perf/variant-store';
+import { toggleColorVariant, useVariantStore } from '@/perf/stores';
 
 function Controls() {
   const { styles } = useStyles(stylesheet);

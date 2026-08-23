@@ -15,7 +15,7 @@ import {
   VariantPlainBox,
   VariantThemedBox,
 } from '../components';
-import { CATEGORY, CATEGORY_SHORT, INSTANCE_COUNT } from '../constants';
+import { CATEGORY, CATEGORY_LIST, CATEGORY_SHORT, INSTANCE_COUNT } from '../constants';
 import { PerfProfiler } from '../perf-profiler';
 import type { Category } from '../types';
 
@@ -28,6 +28,15 @@ const SECTION_LABEL: Record<Category, string> = {
   [CATEGORY.DYNAMIC_THEMED]: 'dynamic function (theme accessed)',
   [CATEGORY.VARIANT_THEMED]: 'variant (theme accessed)',
   [CATEGORY.VARIANT_PLAIN]: 'variant (no theme)',
+};
+
+const BOX_BY_CATEGORY: Record<Category, (index: number) => React.ReactNode> = {
+  [CATEGORY.STATIC]: (i) => <StaticBox key={i} index={i} />,
+  [CATEGORY.THEMED]: (i) => <ThemedBox key={i} index={i} />,
+  [CATEGORY.DYNAMIC_PLAIN]: (i) => <DynamicPlainBox key={i} index={i} arg={i} />,
+  [CATEGORY.DYNAMIC_THEMED]: (i) => <DynamicThemedBox key={i} index={i} arg={i} />,
+  [CATEGORY.VARIANT_PLAIN]: (i) => <VariantPlainBox key={i} index={i} />,
+  [CATEGORY.VARIANT_THEMED]: (i) => <VariantThemedBox key={i} index={i} />,
 };
 
 function SectionHeader({ category }: { category: Category }) {
@@ -45,67 +54,21 @@ function StaticGrid() {
 
   return (
     <View style={styles.content}>
-      <PerfProfiler category={CATEGORY.THEMED}>
-        <SectionHeader category={CATEGORY.THEMED} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <ThemedBox key={i} index={i} />
-          ))}
-        </View>
-      </PerfProfiler>
-
-      <PerfProfiler category={CATEGORY.STATIC}>
-        <SectionHeader category={CATEGORY.STATIC} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <StaticBox key={i} index={i} />
-          ))}
-        </View>
-      </PerfProfiler>
-
-      <PerfProfiler category={CATEGORY.DYNAMIC_PLAIN}>
-        <SectionHeader category={CATEGORY.DYNAMIC_PLAIN} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <DynamicPlainBox key={i} index={i} arg={i} />
-          ))}
-        </View>
-      </PerfProfiler>
-
-      <PerfProfiler category={CATEGORY.DYNAMIC_THEMED}>
-        <SectionHeader category={CATEGORY.DYNAMIC_THEMED} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <DynamicThemedBox key={i} index={i} arg={i} />
-          ))}
-        </View>
-      </PerfProfiler>
-
-      <PerfProfiler category={CATEGORY.VARIANT_PLAIN}>
-        <SectionHeader category={CATEGORY.VARIANT_PLAIN} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <VariantPlainBox key={i} index={i} />
-          ))}
-        </View>
-      </PerfProfiler>
-
-      <PerfProfiler category={CATEGORY.VARIANT_THEMED}>
-        <SectionHeader category={CATEGORY.VARIANT_THEMED} />
-        <View style={styles.section}>
-          {INDICES.map((i) => (
-            <VariantThemedBox key={i} index={i} />
-          ))}
-        </View>
-      </PerfProfiler>
+      {CATEGORY_LIST.map((category) => (
+        <PerfProfiler key={category} category={category}>
+          <SectionHeader category={category} />
+          <View style={styles.section}>{INDICES.map((i) => BOX_BY_CATEGORY[category](i))}</View>
+        </PerfProfiler>
+      ))}
     </View>
   );
 }
 
-const stylesheet = createStyleSheet({
+const stylesheet = createStyleSheet((theme) => ({
   content: {
     padding: 8,
     paddingBottom: 120,
+    backgroundColor: theme.colors.background,
   },
   section: {
     flexDirection: 'row',
@@ -113,8 +76,8 @@ const stylesheet = createStyleSheet({
     justifyContent: 'center',
   },
   header: {
-    color: '#ffffff',
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    color: theme.colors.text,
+    backgroundColor: theme.colors.element,
     fontSize: 12,
     fontWeight: '700',
     paddingVertical: 4,
@@ -123,6 +86,6 @@ const stylesheet = createStyleSheet({
     marginBottom: 4,
     borderRadius: 4,
   },
-});
+}));
 
 export { StaticGrid };

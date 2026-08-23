@@ -26,8 +26,6 @@ type MetricsSnapshot = {
 
 type VariantMetrics = {
   key: NestVariantKey;
-  chainNodes: number;
-  leafNodes: number;
   chainRenders: number;
   leafRenders: number;
 };

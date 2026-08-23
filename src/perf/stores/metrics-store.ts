@@ -7,8 +7,8 @@
  * the meter never disturbs what it measures.
  */
 
-import { CATEGORY_LIST, DASHBOARD_THROTTLE_MS } from './constants';
-import type { Category, CategoryMetrics, MetricsSnapshot, RenderPhase } from './types';
+import { CATEGORY_LIST, DASHBOARD_THROTTLE_MS } from '../constants';
+import type { Category, CategoryMetrics, MetricsSnapshot, RenderPhase } from '../types';
 
 function createEmptyCategory(category: Category): CategoryMetrics {
   return {

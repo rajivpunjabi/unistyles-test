@@ -6,8 +6,8 @@
  * retaining any per-instance references.
  */
 
-import { metricsStore } from './metrics-store';
-import type { Category } from './types';
+import { metricsStore } from '../stores/metrics-store';
+import type { Category } from '../types';
 
 function useRenderTracker(category: Category, isMount: boolean) {
   metricsStore.recordRender(category, isMount);

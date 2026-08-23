@@ -5,8 +5,8 @@
  * references.
  */
 
-import { nestedMetricsStore } from './nested-metrics-store';
-import type { NestPart, NestVariantKey } from './types';
+import { nestedMetricsStore } from '../stores/nested-metrics-store';
+import type { NestPart, NestVariantKey } from '../types';
 
 function useNestedRenderTracker(key: NestVariantKey, part: NestPart, isMount: boolean) {
   nestedMetricsStore.recordRender(key, part, isMount);

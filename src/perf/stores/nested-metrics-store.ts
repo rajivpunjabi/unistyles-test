@@ -5,14 +5,12 @@
  * non-memoized nodes) can be told apart per variant.
  */
 
-import { DASHBOARD_THROTTLE_MS, NEST_PART, NEST_VARIANT_KEYS } from './constants';
-import type { NestedSnapshot, NestPart, NestVariantKey, VariantMetrics } from './types';
+import { DASHBOARD_THROTTLE_MS, NEST_PART, NEST_VARIANT_KEYS } from '../constants';
+import type { NestedSnapshot, NestPart, NestVariantKey, VariantMetrics } from '../types';
 
 function createEmptyVariant(key: NestVariantKey): VariantMetrics {
   return {
     key,
-    chainNodes: 0,
-    leafNodes: 0,
     chainRenders: 0,
     leafRenders: 0,
   };
@@ -43,16 +41,11 @@ class NestedMetricsStore {
   }
 
   recordRender(key: NestVariantKey, part: NestPart, isMount: boolean) {
-    const metrics = this.byVariant[key];
-    const isChain = part === NEST_PART.CHAIN;
-
     if (isMount) {
-      if (isChain) {
-        metrics.chainNodes += 1;
-      } else {
-        metrics.leafNodes += 1;
-      }
-    } else if (isChain) {
+      return;
+    }
+    const metrics = this.byVariant[key];
+    if (part === NEST_PART.CHAIN) {
       metrics.chainRenders += 1;
     } else {
       metrics.leafRenders += 1;

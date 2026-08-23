@@ -5,25 +5,28 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 type TreeHeaderProps = {
   label: string;
+  component: string;
 };
 
-function TreeHeader({ label }: TreeHeaderProps) {
+function TreeHeader({ label, component }: TreeHeaderProps) {
   const { styles } = useStyles(stylesheet);
 
-  return <Text style={styles.header}>{label}</Text>;
+  return (
+    <View style={styles.header}>
+      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.component}>{`<${component} />`}</Text>
+    </View>
+  );
 }
 
-const stylesheet = createStyleSheet({
+const stylesheet = createStyleSheet((theme) => ({
   header: {
-    color: '#ffffff',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    fontSize: 12,
-    fontWeight: '700',
+    backgroundColor: theme.colors.element,
     paddingVertical: 4,
     paddingHorizontal: 8,
     marginTop: 12,
@@ -31,6 +34,17 @@ const stylesheet = createStyleSheet({
     marginHorizontal: 8,
     borderRadius: 4,
   },
-});
+  label: {
+    color: theme.colors.text,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  component: {
+    color: theme.colors.textMuted,
+    fontSize: 10,
+    fontWeight: '600',
+    fontVariant: ['tabular-nums'],
+  },
+}));
 
 export { TreeHeader };

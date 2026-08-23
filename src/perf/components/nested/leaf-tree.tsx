@@ -10,15 +10,15 @@ import React from 'react';
 import { View } from 'react-native';
 import { useStyles } from 'react-native-unistyles';
 
-import { NEST_BRANCHING, NEST_PART } from '../../constants';
+import { NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
-import { useNestedRenderTracker } from '../../use-nested-render-tracker';
+import { useNestedRenderTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 import { CHILD_INDICES, LAST_LEVEL, leafThemedSheet, plainStyles } from './nested-styles';
 
 const KEY: NestVariantKey = 'leaf-no-memo';
 
-function LeafLeaf({ index }: { index: number }) {
+function LeafLeaf({ level }: { level: number }) {
   const { styles } = useStyles(leafThemedSheet);
   const renders = React.useRef(0);
   renders.current += 1;
@@ -26,12 +26,12 @@ function LeafLeaf({ index }: { index: number }) {
 
   return (
     <View style={styles.leaf}>
-      <BoxContent label={`L${index}`} count={renders.current} />
+      <BoxContent label={`L${level}`} count={renders.current} />
     </View>
   );
 }
 
-function LeafChain({ level, index }: { level: number; index: number }) {
+function LeafChain({ level }: { level: number }) {
   const renders = React.useRef(0);
   renders.current += 1;
   useNestedRenderTracker(KEY, NEST_PART.CHAIN, renders.current === 1);
@@ -43,21 +43,20 @@ function LeafChain({ level, index }: { level: number; index: number }) {
     <View style={plainStyles.plainChain}>
       <BoxContent label={`C${level}`} count={renders.current} />
       <View style={plainStyles.childrenRow}>
-        {CHILD_INDICES.map((c) => {
-          const childIndex = index * NEST_BRANCHING + c;
-          return childIsLeaf ? (
-            <LeafLeaf key={c} index={childIndex} />
+        {CHILD_INDICES.map((c) =>
+          childIsLeaf ? (
+            <LeafLeaf key={c} level={childLevel} />
           ) : (
-            <LeafChain key={c} level={childLevel} index={childIndex} />
-          );
-        })}
+            <LeafChain key={c} level={childLevel} />
+          ),
+        )}
       </View>
     </View>
   );
 }
 
 function LeafTree() {
-  return <LeafChain level={0} index={0} />;
+  return <LeafChain level={0} />;
 }
 
 export { LeafTree };

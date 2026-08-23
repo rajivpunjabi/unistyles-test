@@ -9,7 +9,7 @@ import { Text, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY_LIST } from '@/perf/constants';
-import { useMetrics } from '@/perf/use-metrics';
+import { useMetrics } from '@/perf/hooks';
 
 function Dashboard() {
   const { styles } = useStyles(stylesheet);

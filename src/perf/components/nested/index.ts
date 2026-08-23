@@ -11,6 +11,14 @@ const NESTED_TREE_BY_KEY: Record<NestVariantKey, ComponentType> = {
   'leaf-no-memo': LeafTree,
 };
 
-export { AllTree, ParentTree, LeafTree, NESTED_TREE_BY_KEY };
+// Stable display names — derived here (not from Fn.name, which minifies away in
+// release builds) so the tree header can show which component renders it.
+const NESTED_TREE_NAME_BY_KEY: Record<NestVariantKey, string> = {
+  'all-no-memo': 'AllTree',
+  'parent-memo': 'ParentTree',
+  'leaf-no-memo': 'LeafTree',
+};
+
+export { AllTree, ParentTree, LeafTree, NESTED_TREE_BY_KEY, NESTED_TREE_NAME_BY_KEY };
 export { NestedControls } from './nested-controls';
 export { TreeHeader } from './tree-header';

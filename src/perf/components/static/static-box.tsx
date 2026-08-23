@@ -8,9 +8,9 @@ import React, { memo, useRef } from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../constants';
-import { useRenderTracker } from '../use-render-tracker';
-import { BoxContent } from './box-content';
+import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
+import { useRenderTracker } from '../../hooks';
+import { BoxContent } from '../box-content';
 
 const stylesheet = createStyleSheet({
   box: {
