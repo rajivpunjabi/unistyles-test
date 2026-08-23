@@ -6,8 +6,7 @@
  */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { TEST_ID } from '../../constants';
 
@@ -19,8 +18,6 @@ type NestedControlsProps = {
 };
 
 function NestedControls({ bump, onToggleTheme, onBump, onReset }: NestedControlsProps) {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <View style={styles.controls}>
       <Pressable testID={TEST_ID.NESTED_THEME} style={styles.button} onPress={onToggleTheme}>
@@ -36,7 +33,7 @@ function NestedControls({ bump, onToggleTheme, onBump, onReset }: NestedControls
   );
 }
 
-const stylesheet = createStyleSheet({
+const styles = StyleSheet.create({
   controls: {
     flexDirection: 'row',
     flexWrap: 'wrap',

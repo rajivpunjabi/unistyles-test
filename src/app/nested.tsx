@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { UnistylesRuntime } from 'react-native-unistyles';
 
 import { NestedDashboard } from '@/components/dashboard';
 import {
@@ -22,9 +21,9 @@ import { nestedMetricsStore } from '@/perf/stores';
 export default function NestedScreen() {
   const [bump, setBump] = useState(0);
 
-  const onToggleTheme = () => {
-    UnistylesRuntime.setTheme(UnistylesRuntime.themeName === 'dark' ? 'light' : 'dark');
-  };
+  // No theming on this branch (static light styles) — toggle is a no-op, kept
+  // only so the shared Maestro flow's testID still resolves.
+  const onToggleTheme = () => {};
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>

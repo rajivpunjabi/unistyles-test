@@ -4,15 +4,15 @@
  */
 
 import React, { memo } from 'react';
-import { View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet, View } from 'react-native';
 
+import { lightTheme } from '@/styles/themes';
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
 import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
-const stylesheet = createStyleSheet((theme) => ({
-  box: (hue: number) => ({
+const styles = StyleSheet.create({
+  box: {
     width: 60,
     height: 48,
     margin: 2,
@@ -20,10 +20,9 @@ const stylesheet = createStyleSheet((theme) => ({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: `hsl(${hue % 360}, 55%, 55%)`,
-    backgroundColor: theme.colors.element,
-  }),
-}));
+    backgroundColor: lightTheme.colors.element,
+  },
+});
 
 type DynamicThemedBoxProps = {
   index: number;
@@ -31,13 +30,13 @@ type DynamicThemedBoxProps = {
 };
 
 function DynamicThemedBoxComponent({ index, arg }: DynamicThemedBoxProps) {
-  const { styles } = useStyles(stylesheet);
   const hue = (index * 7 + arg) % 360;
-  const boxStyle = styles.box(hue);
   const commits = useCommitTracker(CATEGORY.DYNAMIC_THEMED);
 
   return (
-    <View testID={boxTestId(CATEGORY.DYNAMIC_THEMED, index)} style={boxStyle}>
+    <View
+      testID={boxTestId(CATEGORY.DYNAMIC_THEMED, index)}
+      style={[styles.box, { borderColor: `hsl(${hue % 360}, 55%, 55%)` }]}>
       <BoxContent label={CATEGORY_SHORT[CATEGORY.DYNAMIC_THEMED]} count={commits} />
     </View>
   );

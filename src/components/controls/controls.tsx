@@ -4,19 +4,18 @@
  */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { createStyleSheet, UnistylesRuntime, useStyles } from 'react-native-unistyles';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { TEST_ID } from '@/perf/constants';
 import { toggleColorVariant, useVariantStore } from '@/perf/stores';
+import { lightTheme } from '@/styles/themes';
 
 function Controls() {
-  const { styles } = useStyles(stylesheet);
   const colorVariant = useVariantStore((s) => s.colorVariant);
 
-  const onToggleTheme = () => {
-    UnistylesRuntime.setTheme(UnistylesRuntime.themeName === 'dark' ? 'light' : 'dark');
-  };
+  // No theming on this branch (static light styles) — the toggle is a no-op,
+  // kept only so the shared Maestro flow's testID still resolves.
+  const onToggleTheme = () => {};
 
   return (
     <View style={styles.container}>
@@ -31,7 +30,7 @@ function Controls() {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create({
   container: {
     gap: 8,
     padding: 12,
@@ -40,13 +39,13 @@ const stylesheet = createStyleSheet((theme) => ({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: theme.colors.elementActive,
+    backgroundColor: lightTheme.colors.elementActive,
   },
   label: {
-    color: theme.colors.text,
+    color: lightTheme.colors.text,
     fontWeight: '600',
     textAlign: 'center',
   },
-}));
+});
 
 export { Controls };

@@ -1,17 +1,16 @@
 /**
- * Standard theme-accessing stylesheet: reads colors from the active theme.
- * Expected to re-render on every theme switch.
+ * Static react-native StyleSheet with fixed light-theme colors (no theming).
  */
 
 import React, { memo } from 'react';
-import { View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet, View } from 'react-native';
 
+import { lightTheme } from '@/styles/themes';
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
 import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create({
   box: {
     width: 60,
     height: 48,
@@ -20,17 +19,16 @@ const stylesheet = createStyleSheet((theme) => ({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.colors.element,
-    borderColor: theme.colors.border,
+    backgroundColor: lightTheme.colors.element,
+    borderColor: lightTheme.colors.border,
   },
-}));
+});
 
 type ThemedBoxProps = {
   index: number;
 };
 
 function ThemedBoxComponent({ index }: ThemedBoxProps) {
-  const { styles } = useStyles(stylesheet);
   const commits = useCommitTracker(CATEGORY.THEMED);
 
   return (

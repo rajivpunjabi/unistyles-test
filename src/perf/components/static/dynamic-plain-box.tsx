@@ -5,15 +5,14 @@
  */
 
 import React, { memo } from 'react';
-import { View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet, View } from 'react-native';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
 import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
-const stylesheet = createStyleSheet({
-  box: (hue: number) => ({
+const styles = StyleSheet.create({
+  box: {
     width: 60,
     height: 48,
     margin: 2,
@@ -21,9 +20,8 @@ const stylesheet = createStyleSheet({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: `hsl(${hue % 360}, 55%, 55%)`,
     backgroundColor: 'red',
-  }),
+  },
 });
 
 type DynamicPlainBoxProps = {
@@ -32,13 +30,13 @@ type DynamicPlainBoxProps = {
 };
 
 function DynamicPlainBoxComponent({ index, arg }: DynamicPlainBoxProps) {
-  const { styles } = useStyles(stylesheet);
   const hue = (index * 7 + arg) % 360;
-  const boxStyle = styles.box(hue);
   const commits = useCommitTracker(CATEGORY.DYNAMIC_PLAIN);
 
   return (
-    <View testID={boxTestId(CATEGORY.DYNAMIC_PLAIN, index)} style={boxStyle}>
+    <View
+      testID={boxTestId(CATEGORY.DYNAMIC_PLAIN, index)}
+      style={[styles.box, { borderColor: `hsl(${hue % 360}, 55%, 55%)` }]}>
       <BoxContent label={CATEGORY_SHORT[CATEGORY.DYNAMIC_PLAIN]} count={commits} />
     </View>
   );

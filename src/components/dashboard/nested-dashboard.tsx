@@ -5,14 +5,13 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { NEST_VARIANTS } from '@/perf/constants';
 import { useNestedMetrics } from '@/perf/hooks';
+import { lightTheme } from '@/styles/themes';
 
 function NestedDashboard() {
-  const { styles } = useStyles(stylesheet);
   const metrics = useNestedMetrics();
 
   return (
@@ -37,22 +36,22 @@ function NestedDashboard() {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create({
   container: {
     padding: 12,
     gap: 3,
-    backgroundColor: theme.colors.background,
+    backgroundColor: lightTheme.colors.background,
   },
   title: {
     fontWeight: '700',
     fontSize: 14,
     marginBottom: 4,
-    color: theme.colors.text,
+    color: lightTheme.colors.text,
   },
   headerRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: lightTheme.colors.border,
     paddingBottom: 2,
   },
   row: {
@@ -63,7 +62,7 @@ const stylesheet = createStyleSheet((theme) => ({
     fontSize: 12,
     fontVariant: ['tabular-nums'],
     textAlign: 'right',
-    color: theme.colors.text,
+    color: lightTheme.colors.text,
   },
   nameCell: {
     flex: 2.4,
@@ -72,6 +71,6 @@ const stylesheet = createStyleSheet((theme) => ({
   headerText: {
     fontWeight: '700',
   },
-}));
+});
 
 export { NestedDashboard };
