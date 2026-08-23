@@ -2,7 +2,7 @@
  * Plain react-native StyleSheet baseline — fixed colors, no theming at all.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
@@ -37,6 +37,6 @@ function StaticBoxComponent({ index }: StaticBoxProps) {
   );
 }
 
-const StaticBox = memo(StaticBoxComponent);
+const StaticBox = StaticBoxComponent;
 
 export { StaticBox };

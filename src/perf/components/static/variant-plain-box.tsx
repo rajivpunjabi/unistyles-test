@@ -3,7 +3,7 @@
  * Isolates variant-resolution cost with no theme involvement.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
@@ -44,6 +44,6 @@ function VariantPlainBoxComponent({ index }: VariantPlainBoxProps) {
   );
 }
 
-const VariantPlainBox = memo(VariantPlainBoxComponent);
+const VariantPlainBox = VariantPlainBoxComponent;
 
 export { VariantPlainBox };

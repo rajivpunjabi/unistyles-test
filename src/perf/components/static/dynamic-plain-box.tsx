@@ -4,7 +4,7 @@
  * Isolates the pure dynamic-function cost with no theme involvement.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
@@ -42,6 +42,6 @@ function DynamicPlainBoxComponent({ index, arg }: DynamicPlainBoxProps) {
   );
 }
 
-const DynamicPlainBox = memo(DynamicPlainBoxComponent);
+const DynamicPlainBox = DynamicPlainBoxComponent;
 
 export { DynamicPlainBox };

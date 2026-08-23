@@ -2,7 +2,7 @@
  * Static react-native StyleSheet with fixed light-theme colors (no theming).
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { lightTheme } from '@/styles/themes';
@@ -38,6 +38,6 @@ function ThemedBoxComponent({ index }: ThemedBoxProps) {
   );
 }
 
-const ThemedBox = memo(ThemedBoxComponent);
+const ThemedBox = ThemedBoxComponent;
 
 export { ThemedBox };

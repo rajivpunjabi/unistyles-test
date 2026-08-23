@@ -3,7 +3,7 @@
  * manually via a style array (react-native has no variants API).
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { lightTheme } from '@/styles/themes';
@@ -45,6 +45,6 @@ function VariantThemedBoxComponent({ index }: VariantThemedBoxProps) {
   );
 }
 
-const VariantThemedBox = memo(VariantThemedBoxComponent);
+const VariantThemedBox = VariantThemedBoxComponent;
 
 export { VariantThemedBox };
