@@ -7,18 +7,21 @@
 #
 # Reports are named after each APK (see .json result files in ./outputs).
 #
-# Usage: yarn measure [--size-only] <apk1> <apk2> [apk3 ...]
+# Usage: yarn measure [--size-only] [--flow <name>|--bump] <apk1> <apk2> [apk3 ...]
 #   e.g. yarn measure main.apk v3-unistyles.apk native-stylesheets.apk
+#   e.g. yarn measure --bump main.apk v3-unistyles.apk
 #   (names are resolved inside ./outputs; first APK is the baseline)
 #
-# --size-only: skip adb/Flashlight/Maestro entirely and produce ONLY the
-#   APK-based size comparison (native libs + JS bundle) as its own markdown.
+# --flow <name>: Maestro flow under .maestro/<name>.yaml (default: toggle-theme).
+# --bump:        shorthand for --flow bump (drives the root-state bump instead
+#                of the theme toggle).
+# --size-only:   skip adb/Flashlight/Maestro entirely and produce ONLY the
+#                APK-based size comparison (native libs + JS bundle) as markdown.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 OUT_DIR="$ROOT/outputs"
-FLOW="$ROOT/.maestro/toggle-theme.yaml"
 APP_ID="$(node -e "console.log(require('./app.json').expo.android.package)")"
 ITERATION_COUNT=10
 DURATION_MS=8000
@@ -28,17 +31,30 @@ DURATION_MS=8000
 ABI="${ABI:-arm64-v8a}"
 
 SIZE_ONLY=0
+# Maestro flow to drive (file under .maestro/, without extension). Default drives
+# the theme toggle; --bump / --flow bump drives the root-state bump instead.
+FLOW_NAME="toggle-theme"
 ARGS=()
-for a in "$@"; do
-  case "$a" in
+while [ "$#" -gt 0 ]; do
+  case "$1" in
     --size-only|--apk-only) SIZE_ONLY=1 ;;
-    *) ARGS+=("$a") ;;
+    --bump) FLOW_NAME="bump" ;;
+    --flow) shift; FLOW_NAME="${1:-}" ;;
+    --flow=*) FLOW_NAME="${1#*=}" ;;
+    *) ARGS+=("$1") ;;
   esac
+  shift
 done
 set -- ${ARGS[@]+"${ARGS[@]}"}
 
+FLOW="$ROOT/.maestro/${FLOW_NAME}.yaml"
+if [ ! -f "$FLOW" ]; then
+  echo "ERROR: flow '$FLOW_NAME' not found at $FLOW"
+  exit 1
+fi
+
 if [ "$#" -lt 2 ]; then
-  echo "usage: yarn measure [--size-only] <apk1> <apk2> [apk3 ...]  (names inside ./outputs)"
+  echo "usage: yarn measure [--size-only] [--flow <name>|--bump] <apk1> <apk2> [apk3 ...]"
   exit 1
 fi
 
@@ -194,6 +210,7 @@ if [ "$SIZE_ONLY" -eq 1 ]; then
   exit 0
 fi
 
+echo "==> flow: $FLOW_NAME ($FLOW)"
 for apk in "${APKS[@]}"; do
   run_one "$apk"
 done
