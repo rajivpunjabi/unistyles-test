@@ -2,8 +2,6 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 
-import '@/styles/init';
-
 const TAB_COLORS = {
   light: { background: '#ffffff', backgroundElement: '#F0F0F3', text: '#000000' },
   dark: { background: '#000000', backgroundElement: '#212225', text: '#ffffff' },

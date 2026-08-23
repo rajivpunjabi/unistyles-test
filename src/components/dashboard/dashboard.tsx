@@ -6,13 +6,12 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { CATEGORY_LIST } from '@/perf/constants';
 import { useMetrics } from '@/perf/hooks';
 
 function Dashboard() {
-  const { styles } = useStyles(stylesheet);
   const metrics = useMetrics();
 
   return (
@@ -41,7 +40,7 @@ function Dashboard() {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   container: {
     padding: 12,
     gap: 4,

@@ -1,12 +1,13 @@
 /**
- * Unistyles v2 runtime configuration.
+ * Unistyles v3 runtime configuration.
  *
- * Registers breakpoints, themes and adaptive-theme config, and augments the
- * library's type definitions so `theme` and breakpoints are fully typed at
- * every call site. Import this file once, early in the app entry.
+ * Registers themes, breakpoints and settings via StyleSheet.configure, and
+ * augments the library's type definitions so `theme` and breakpoints are fully
+ * typed at every call site. Imported once from the app entry (index.ts) before
+ * any StyleSheet.create runs.
  */
 
-import { UnistylesRegistry } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { breakpoints } from './breakpoints';
 import { darkTheme, lightTheme } from './themes';
@@ -22,12 +23,14 @@ declare module 'react-native-unistyles' {
   export interface UnistylesThemes extends AppThemes {}
 }
 
-UnistylesRegistry.addBreakpoints(breakpoints)
-  .addThemes({
+StyleSheet.configure({
+  themes: {
     light: lightTheme,
     dark: darkTheme,
-  })
-  .addConfig({
+  },
+  breakpoints,
+  settings: {
     adaptiveThemes: false,
     initialTheme: 'light',
-  });
+  },
+});

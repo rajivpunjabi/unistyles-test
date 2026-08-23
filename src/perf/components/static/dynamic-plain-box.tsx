@@ -6,13 +6,13 @@
 
 import React, { memo } from 'react';
 import { View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
 import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
-const stylesheet = createStyleSheet({
+const styles = StyleSheet.create({
   box: (hue: number) => ({
     width: 60,
     height: 48,
@@ -32,7 +32,6 @@ type DynamicPlainBoxProps = {
 };
 
 function DynamicPlainBoxComponent({ index, arg }: DynamicPlainBoxProps) {
-  const { styles } = useStyles(stylesheet);
   const hue = (index * 7 + arg) % 360;
   const boxStyle = styles.box(hue);
   const commits = useCommitTracker(CATEGORY.DYNAMIC_PLAIN);

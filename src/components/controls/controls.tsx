@@ -5,13 +5,12 @@
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { createStyleSheet, UnistylesRuntime, useStyles } from 'react-native-unistyles';
+import { StyleSheet, UnistylesRuntime } from 'react-native-unistyles';
 
 import { TEST_ID } from '@/perf/constants';
 import { toggleColorVariant, useVariantStore } from '@/perf/stores';
 
 function Controls() {
-  const { styles } = useStyles(stylesheet);
   const colorVariant = useVariantStore((s) => s.colorVariant);
 
   const onToggleTheme = () => {
@@ -31,7 +30,7 @@ function Controls() {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   container: {
     gap: 8,
     padding: 12,

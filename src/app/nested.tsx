@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { UnistylesRuntime } from 'react-native-unistyles';
+import { ScrollView, View } from 'react-native';
+import { StyleSheet, UnistylesRuntime } from 'react-native-unistyles';
 
 import { NestedDashboard } from '@/components/dashboard';
 import {

@@ -1,14 +1,12 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { Controls } from '@/components/controls';
 import { Dashboard } from '@/components/dashboard';
 import { StaticGrid } from '@/perf/grids/static-grid';
 
 export default function StaticScreen() {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Controls />
@@ -18,7 +16,7 @@ export default function StaticScreen() {
   );
 }
 
-const stylesheet = createStyleSheet({
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#ffffff',

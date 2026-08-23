@@ -2,14 +2,15 @@
  * Shared styles + shape constants for the nested binary trees. Each variant tree
  * (all/parent/leaf) is its own component.
  *
- * Themed node/leaf are unistyles createStyleSheet (theme consumers, read via
- * useStyles). Plain node/leaf + the children row are react-native StyleSheet —
- * NOT unistyles — on purpose: the plain nodes must stay non-consumers so a theme
- * toggle never re-renders them (that is what the leaf-no-memo variant shows).
+ * Themed node/leaf are unistyles StyleSheet.create (theme consumers; in v3 they
+ * update via the ShadowTree with no re-render). Plain node/leaf + the children row
+ * are react-native StyleSheet — NOT unistyles — on purpose: the plain nodes must
+ * stay non-consumers so a theme toggle never touches them (that is what the
+ * leaf-no-memo variant shows).
  */
 
-import { StyleSheet } from 'react-native';
-import { createStyleSheet } from 'react-native-unistyles';
+import { StyleSheet as RNStyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { NEST_BRANCHING, NEST_DEPTH } from '../../constants';
 
@@ -17,7 +18,7 @@ const CHILD_INDICES = Array.from({ length: NEST_BRANCHING }, (_, i) => i);
 
 const LAST_LEVEL = NEST_DEPTH - 1;
 
-const plainStyles = StyleSheet.create({
+const plainStyles = RNStyleSheet.create({
   plainChain: {
     padding: 3,
     margin: 1,
@@ -45,7 +46,7 @@ const plainStyles = StyleSheet.create({
   },
 });
 
-const chainThemedSheet = createStyleSheet((theme) => ({
+const chainThemedSheet = StyleSheet.create((theme) => ({
   node: {
     padding: 3,
     margin: 1,
@@ -58,7 +59,7 @@ const chainThemedSheet = createStyleSheet((theme) => ({
   },
 }));
 
-const leafThemedSheet = createStyleSheet((theme) => ({
+const leafThemedSheet = StyleSheet.create((theme) => ({
   leaf: {
     width: 40,
     height: 30,
