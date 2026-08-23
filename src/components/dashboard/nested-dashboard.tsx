@@ -17,7 +17,7 @@ function NestedDashboard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Re-renders per variant (chain / leaf)</Text>
+      <Text style={styles.title}>Commits per variant (chain / leaf)</Text>
       <View style={styles.headerRow}>
         <Text style={[styles.cell, styles.nameCell, styles.headerText]}>variant</Text>
         <Text style={[styles.cell, styles.headerText]}>chain</Text>
@@ -28,8 +28,8 @@ function NestedDashboard() {
         return (
           <View key={v.key} style={styles.row} testID={`nested-metrics-${v.key}`}>
             <Text style={[styles.cell, styles.nameCell]}>{v.label}</Text>
-            <Text style={styles.cell}>{m.chainRenders}</Text>
-            <Text style={styles.cell}>{m.leafRenders}</Text>
+            <Text style={styles.cell}>{m.chainCommits}</Text>
+            <Text style={styles.cell}>{m.leafCommits}</Text>
           </View>
         );
       })}

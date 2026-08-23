@@ -17,10 +17,10 @@ function Dashboard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Renders (total: {metrics.totalRenders})</Text>
+      <Text style={styles.title}>Commits (total: {metrics.totalCommits})</Text>
       <View style={styles.headerRow}>
         <Text style={[styles.cell, styles.nameCell, styles.headerText]}>category</Text>
-        <Text style={[styles.cell, styles.headerText]}>rndr</Text>
+        <Text style={[styles.cell, styles.headerText]}>cmt</Text>
         <Text style={[styles.cell, styles.headerText]}>upd</Text>
         <Text style={[styles.cell, styles.headerText]}>mnt ms</Text>
         <Text style={[styles.cell, styles.headerText]}>upd ms</Text>
@@ -30,7 +30,7 @@ function Dashboard() {
         return (
           <View key={category} style={styles.row} testID={`metrics-${category}`}>
             <Text style={[styles.cell, styles.nameCell]}>{category}</Text>
-            <Text style={styles.cell}>{m.renderCount}</Text>
+            <Text style={styles.cell}>{m.commitCount}</Text>
             <Text style={styles.cell}>{m.updateCount}</Text>
             <Text style={styles.cell}>{m.mountDurationMs.toFixed(1)}</Text>
             <Text style={styles.cell}>{m.updateDurationMs.toFixed(1)}</Text>

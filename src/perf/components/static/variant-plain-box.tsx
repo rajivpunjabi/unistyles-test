@@ -3,12 +3,12 @@
  * Isolates variant-resolution cost with no theme involvement.
  */
 
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
-import { useRenderTracker } from '../../hooks';
+import { useCommitTracker } from '../../hooks';
 import { useVariantStore } from '../../stores';
 import { BoxContent } from '../box-content';
 
@@ -43,13 +43,11 @@ function VariantPlainBoxComponent({ index }: VariantPlainBoxProps) {
     color: colorVariant,
     size: index % 2 === 0 ? 'small' : 'large',
   });
-  const renders = useRef(0);
-  renders.current += 1;
-  useRenderTracker(CATEGORY.VARIANT_PLAIN, renders.current === 1);
+  const commits = useCommitTracker(CATEGORY.VARIANT_PLAIN);
 
   return (
     <View testID={boxTestId(CATEGORY.VARIANT_PLAIN, index)} style={styles.box}>
-      <BoxContent label={CATEGORY_SHORT[CATEGORY.VARIANT_PLAIN]} count={renders.current} />
+      <BoxContent label={CATEGORY_SHORT[CATEGORY.VARIANT_PLAIN]} count={commits} />
     </View>
   );
 }

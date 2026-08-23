@@ -4,12 +4,12 @@
  * whether v2 re-renders theme-agnostic components on a theme switch.
  */
 
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
-import { useRenderTracker } from '../../hooks';
+import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
 const stylesheet = createStyleSheet({
@@ -32,13 +32,11 @@ type StaticBoxProps = {
 
 function StaticBoxComponent({ index }: StaticBoxProps) {
   const { styles } = useStyles(stylesheet);
-  const renders = useRef(0);
-  renders.current += 1;
-  useRenderTracker(CATEGORY.STATIC, renders.current === 1);
+  const commits = useCommitTracker(CATEGORY.STATIC);
 
   return (
     <View testID={boxTestId(CATEGORY.STATIC, index)} style={styles.box}>
-      <BoxContent label={CATEGORY_SHORT[CATEGORY.STATIC]} count={renders.current} />
+      <BoxContent label={CATEGORY_SHORT[CATEGORY.STATIC]} count={commits} />
     </View>
   );
 }

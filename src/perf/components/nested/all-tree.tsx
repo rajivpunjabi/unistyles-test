@@ -10,7 +10,7 @@ import { useStyles } from 'react-native-unistyles';
 
 import { NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
-import { useNestedRenderTracker } from '../../hooks';
+import { useNestedCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 import {
   CHILD_INDICES,
@@ -24,29 +24,25 @@ const KEY: NestVariantKey = 'all-no-memo';
 
 function AllLeaf({ level }: { level: number }) {
   const { styles } = useStyles(leafThemedSheet);
-  const renders = React.useRef(0);
-  renders.current += 1;
-  useNestedRenderTracker(KEY, NEST_PART.LEAF, renders.current === 1);
+  const commits = useNestedCommitTracker(KEY, NEST_PART.LEAF);
 
   return (
     <View style={styles.leaf}>
-      <BoxContent label={`L${level}`} count={renders.current} />
+      <BoxContent label={`L${level}`} count={commits} />
     </View>
   );
 }
 
 function AllChain({ level }: { level: number }) {
   const { styles } = useStyles(chainThemedSheet);
-  const renders = React.useRef(0);
-  renders.current += 1;
-  useNestedRenderTracker(KEY, NEST_PART.CHAIN, renders.current === 1);
+  const commits = useNestedCommitTracker(KEY, NEST_PART.CHAIN);
 
   const childLevel = level + 1;
   const childIsLeaf = childLevel >= LAST_LEVEL;
 
   return (
     <View style={styles.node}>
-      <BoxContent label={`C${level}`} count={renders.current} />
+      <BoxContent label={`C${level}`} count={commits} />
       <View style={plainStyles.childrenRow}>
         {CHILD_INDICES.map((c) =>
           childIsLeaf ? (

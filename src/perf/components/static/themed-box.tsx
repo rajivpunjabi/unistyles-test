@@ -3,12 +3,12 @@
  * Expected to re-render on every theme switch.
  */
 
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
-import { useRenderTracker } from '../../hooks';
+import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
 const stylesheet = createStyleSheet((theme) => ({
@@ -31,13 +31,11 @@ type ThemedBoxProps = {
 
 function ThemedBoxComponent({ index }: ThemedBoxProps) {
   const { styles } = useStyles(stylesheet);
-  const renders = useRef(0);
-  renders.current += 1;
-  useRenderTracker(CATEGORY.THEMED, renders.current === 1);
+  const commits = useCommitTracker(CATEGORY.THEMED);
 
   return (
     <View testID={boxTestId(CATEGORY.THEMED, index)} style={styles.box}>
-      <BoxContent label={CATEGORY_SHORT[CATEGORY.THEMED]} count={renders.current} />
+      <BoxContent label={CATEGORY_SHORT[CATEGORY.THEMED]} count={commits} />
     </View>
   );
 }

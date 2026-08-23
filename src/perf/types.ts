@@ -10,24 +10,24 @@ type RenderPhase = 'mount' | 'update' | 'nested-update';
 
 type CategoryMetrics = {
   category: Category;
-  renderCount: number;
+  commitCount: number;
   mountCount: number;
   updateCount: number;
   mountDurationMs: number;
   updateDurationMs: number;
-  lastRenderAt: number;
+  lastCommitAt: number;
 };
 
 type MetricsSnapshot = {
   byCategory: Record<Category, CategoryMetrics>;
-  totalRenders: number;
+  totalCommits: number;
   updatedAt: number;
 };
 
 type VariantMetrics = {
   key: NestVariantKey;
-  chainRenders: number;
-  leafRenders: number;
+  chainCommits: number;
+  leafCommits: number;
 };
 
 type NestedSnapshot = {

@@ -4,12 +4,12 @@
  * Isolates the pure dynamic-function cost with no theme involvement.
  */
 
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
-import { useRenderTracker } from '../../hooks';
+import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
 const stylesheet = createStyleSheet({
@@ -33,15 +33,13 @@ type DynamicPlainBoxProps = {
 
 function DynamicPlainBoxComponent({ index, arg }: DynamicPlainBoxProps) {
   const { styles } = useStyles(stylesheet);
-  const renders = useRef(0);
-  renders.current += 1;
   const hue = (index * 7 + arg) % 360;
   const boxStyle = styles.box(hue);
-  useRenderTracker(CATEGORY.DYNAMIC_PLAIN, renders.current === 1);
+  const commits = useCommitTracker(CATEGORY.DYNAMIC_PLAIN);
 
   return (
     <View testID={boxTestId(CATEGORY.DYNAMIC_PLAIN, index)} style={boxStyle}>
-      <BoxContent label={CATEGORY_SHORT[CATEGORY.DYNAMIC_PLAIN]} count={renders.current} />
+      <BoxContent label={CATEGORY_SHORT[CATEGORY.DYNAMIC_PLAIN]} count={commits} />
     </View>
   );
 }

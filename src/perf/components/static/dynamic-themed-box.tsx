@@ -3,12 +3,12 @@
  * theme colors, so it recomputes on every render and also on every theme switch.
  */
 
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
-import { useRenderTracker } from '../../hooks';
+import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
 const stylesheet = createStyleSheet((theme) => ({
@@ -32,15 +32,13 @@ type DynamicThemedBoxProps = {
 
 function DynamicThemedBoxComponent({ index, arg }: DynamicThemedBoxProps) {
   const { styles } = useStyles(stylesheet);
-  const renders = useRef(0);
-  renders.current += 1;
   const hue = (index * 7 + arg) % 360;
   const boxStyle = styles.box(hue);
-  useRenderTracker(CATEGORY.DYNAMIC_THEMED, renders.current === 1);
+  const commits = useCommitTracker(CATEGORY.DYNAMIC_THEMED);
 
   return (
     <View testID={boxTestId(CATEGORY.DYNAMIC_THEMED, index)} style={boxStyle}>
-      <BoxContent label={CATEGORY_SHORT[CATEGORY.DYNAMIC_THEMED]} count={renders.current} />
+      <BoxContent label={CATEGORY_SHORT[CATEGORY.DYNAMIC_THEMED]} count={commits} />
     </View>
   );
 }

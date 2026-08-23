@@ -11,8 +11,8 @@ import type { NestedSnapshot, NestPart, NestVariantKey, VariantMetrics } from '.
 function createEmptyVariant(key: NestVariantKey): VariantMetrics {
   return {
     key,
-    chainRenders: 0,
-    leafRenders: 0,
+    chainCommits: 0,
+    leafCommits: 0,
   };
 }
 
@@ -40,15 +40,15 @@ class NestedMetricsStore {
     return next;
   }
 
-  recordRender(key: NestVariantKey, part: NestPart, isMount: boolean) {
+  recordCommit(key: NestVariantKey, part: NestPart, isMount: boolean) {
     if (isMount) {
       return;
     }
     const metrics = this.byVariant[key];
     if (part === NEST_PART.CHAIN) {
-      metrics.chainRenders += 1;
+      metrics.chainCommits += 1;
     } else {
-      metrics.leafRenders += 1;
+      metrics.leafCommits += 1;
     }
     this.markDirty();
   }

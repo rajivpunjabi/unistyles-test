@@ -1,8 +1,9 @@
 /**
  * Non-reactive singleton metrics store.
  *
- * Test components write to it during render via a plain ref counter — it never
- * holds React state, so recording a render can never itself trigger a render.
+ * Test components record a COMMIT into it from useEffect (commit phase), not
+ * render — so discarded renders and StrictMode double-invokes don't inflate the
+ * count. It never holds React state, so recording can't itself trigger a render.
  * The dashboard reads it through useSyncExternalStore with throttled emits so
  * the meter never disturbs what it measures.
  */
@@ -13,12 +14,12 @@ import type { Category, CategoryMetrics, MetricsSnapshot, RenderPhase } from '..
 function createEmptyCategory(category: Category): CategoryMetrics {
   return {
     category,
-    renderCount: 0,
+    commitCount: 0,
     mountCount: 0,
     updateCount: 0,
     mountDurationMs: 0,
     updateDurationMs: 0,
-    lastRenderAt: 0,
+    lastCommitAt: 0,
   };
 }
 
@@ -46,11 +47,11 @@ class MetricsStore {
     return next;
   }
 
-  recordRender(category: Category, isMount: boolean) {
+  recordCommit(category: Category, isMount: boolean) {
     const metrics = this.byCategory[category];
 
-    metrics.renderCount += 1;
-    metrics.lastRenderAt = Date.now();
+    metrics.commitCount += 1;
+    metrics.lastCommitAt = Date.now();
     if (isMount) {
       metrics.mountCount += 1;
     } else {
@@ -92,14 +93,14 @@ class MetricsStore {
 
   private buildSnapshot(): MetricsSnapshot {
     const byCategory = {} as Record<Category, CategoryMetrics>;
-    let totalRenders = 0;
+    let totalCommits = 0;
     for (let i = 0; i < CATEGORY_LIST.length; i++) {
       const category = CATEGORY_LIST[i];
       const metrics = this.byCategory[category];
       byCategory[category] = { ...metrics };
-      totalRenders += metrics.renderCount;
+      totalCommits += metrics.commitCount;
     }
-    return { byCategory, totalRenders, updatedAt: Date.now() };
+    return { byCategory, totalCommits, updatedAt: Date.now() };
   }
 
   private markDirty() {
