@@ -10,7 +10,12 @@ import { TEST_ID } from '@/perf/constants';
 import { toggleColorVariant, useVariantStore } from '@/perf/stores';
 import { lightTheme } from '@/styles/themes';
 
-function Controls() {
+type ControlsProps = {
+  bump: number;
+  onBump: () => void;
+};
+
+function Controls({ bump, onBump }: ControlsProps) {
   const colorVariant = useVariantStore((s) => s.colorVariant);
 
   // No theming on this branch (static light styles) — the toggle is a no-op,
@@ -25,6 +30,10 @@ function Controls() {
 
       <Pressable testID={TEST_ID.VARIANT_TOGGLE} style={styles.button} onPress={toggleColorVariant}>
         <Text style={styles.label}>Variant: {colorVariant}</Text>
+      </Pressable>
+
+      <Pressable testID={TEST_ID.STATIC_BUMP} style={styles.button} onPress={onBump}>
+        <Text style={styles.label}>Bump: {bump}</Text>
       </Pressable>
     </View>
   );

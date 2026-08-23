@@ -79,6 +79,7 @@ const DASHBOARD_THROTTLE_MS = 250;
 const TEST_ID = {
   THEME_TOGGLE: 'control-theme-toggle',
   VARIANT_TOGGLE: 'control-variant-toggle',
+  STATIC_BUMP: 'control-static-bump',
   TAB_HOME: 'tab-home',
   TAB_STATIC: 'tab-static',
   TAB_NESTED: 'tab-nested',
