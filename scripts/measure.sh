@@ -157,7 +157,7 @@ append_size_report() {
     printf '|'
     for l in "${labels[@]}"; do printf ' %s |' "$l"; done
     printf '\n|'
-    for _ in "${labels[@]}"; do printf '--:|'; done
+    for _ in "${labels[@]}"; do printf '%s' '--:|'; done
     printf '\n'
 
     local base_bundle; base_bundle="$(bundle_size "$OUT_DIR/${apks[0]}")"; base_bundle="${base_bundle:-0}"
