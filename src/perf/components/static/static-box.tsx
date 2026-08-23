@@ -3,7 +3,7 @@
  * dependency, so in v3 a theme switch should neither re-render nor update it.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
@@ -39,6 +39,6 @@ function StaticBoxComponent({ index }: StaticBoxProps) {
   );
 }
 
-const StaticBox = memo(StaticBoxComponent);
+const StaticBox = StaticBoxComponent;
 
 export { StaticBox };

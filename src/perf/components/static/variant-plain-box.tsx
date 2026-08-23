@@ -3,7 +3,7 @@
  * Isolates variant-resolution cost with no theme involvement.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
@@ -52,6 +52,6 @@ function VariantPlainBoxComponent({ index }: VariantPlainBoxProps) {
   );
 }
 
-const VariantPlainBox = memo(VariantPlainBoxComponent);
+const VariantPlainBox = VariantPlainBoxComponent;
 
 export { VariantPlainBox };
