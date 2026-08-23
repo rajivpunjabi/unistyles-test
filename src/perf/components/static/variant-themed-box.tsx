@@ -4,7 +4,7 @@
  * variant so variant-change re-renders can be measured.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
@@ -53,6 +53,6 @@ function VariantThemedBoxComponent({ index }: VariantThemedBoxProps) {
   );
 }
 
-const VariantThemedBox = memo(VariantThemedBoxComponent);
+const VariantThemedBox = VariantThemedBoxComponent;
 
 export { VariantThemedBox };

@@ -3,7 +3,7 @@
  * Expected to re-render on every theme switch.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
@@ -40,6 +40,6 @@ function ThemedBoxComponent({ index }: ThemedBoxProps) {
   );
 }
 
-const ThemedBox = memo(ThemedBoxComponent);
+const ThemedBox = ThemedBoxComponent;
 
 export { ThemedBox };

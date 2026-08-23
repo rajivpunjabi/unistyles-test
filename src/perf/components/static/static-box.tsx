@@ -4,7 +4,7 @@
  * whether v2 re-renders theme-agnostic components on a theme switch.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
@@ -41,6 +41,6 @@ function StaticBoxComponent({ index }: StaticBoxProps) {
   );
 }
 
-const StaticBox = memo(StaticBoxComponent);
+const StaticBox = StaticBoxComponent;
 
 export { StaticBox };

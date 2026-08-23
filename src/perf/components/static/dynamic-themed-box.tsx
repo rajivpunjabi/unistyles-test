@@ -3,7 +3,7 @@
  * theme colors, so it recomputes on every render and also on every theme switch.
  */
 
-import React, { memo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
@@ -43,6 +43,6 @@ function DynamicThemedBoxComponent({ index, arg }: DynamicThemedBoxProps) {
   );
 }
 
-const DynamicThemedBox = memo(DynamicThemedBoxComponent);
+const DynamicThemedBox = DynamicThemedBoxComponent;
 
 export { DynamicThemedBox };
