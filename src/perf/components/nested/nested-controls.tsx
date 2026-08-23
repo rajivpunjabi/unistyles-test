@@ -36,7 +36,7 @@ function NestedControls({ bump, onToggleTheme, onBump, onReset }: NestedControls
   );
 }
 
-const stylesheet = createStyleSheet({
+const stylesheet = createStyleSheet((theme) => ({
   controls: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -47,13 +47,13 @@ const stylesheet = createStyleSheet({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: '#2b2f31',
+    backgroundColor: theme.colors.elementActive,
   },
   label: {
-    color: '#ffffff',
+    color: theme.colors.text,
     fontWeight: '600',
     textAlign: 'center',
   },
-});
+}));
 
 export { NestedControls };

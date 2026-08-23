@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 #
-# Run Flashlight on two APKs with the toggle-theme Maestro flow, then open a
-# comparison report. Both APKs share the same bundleId, so they are measured
-# sequentially (install -> measure -> install next).
+# Run Flashlight on N APKs with the toggle-theme Maestro flow, then summarize and
+# open a comparison report. All APKs share the same bundleId, so they are
+# measured sequentially (install -> measure -> install next). The FIRST APK is
+# the baseline; every other is compared against it.
 #
 # Reports are named after each APK (see .json result files in ./outputs).
 #
-# Usage: yarn measure [--size-only] <apk1> <apk2>
-#   e.g. yarn measure main.apk v3-unistyles.apk
-#   (names are resolved inside ./outputs)
+# Usage: yarn measure [--size-only] <apk1> <apk2> [apk3 ...]
+#   e.g. yarn measure main.apk v3-unistyles.apk native-stylesheets.apk
+#   (names are resolved inside ./outputs; first APK is the baseline)
 #
 # --size-only: skip adb/Flashlight/Maestro entirely and produce ONLY the
 #   APK-based size comparison (native libs + JS bundle) as its own markdown.
-#   No emulator, no install, no perf run — just the two .apk files.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -35,12 +35,14 @@ for a in "$@"; do
     *) ARGS+=("$a") ;;
   esac
 done
-set -- "${ARGS[@]}"
+set -- ${ARGS[@]+"${ARGS[@]}"}
 
-if [ "$#" -ne 2 ]; then
-  echo "usage: yarn measure [--size-only] <apk1> <apk2>  (names inside ./outputs)"
+if [ "$#" -lt 2 ]; then
+  echo "usage: yarn measure [--size-only] <apk1> <apk2> [apk3 ...]  (names inside ./outputs)"
   exit 1
 fi
+
+APKS=("$@")
 
 require_apk() {
   if [ ! -f "$OUT_DIR/$1" ]; then
@@ -54,10 +56,7 @@ run_one() {
   local apk_path="$OUT_DIR/$apk_name"
   local result_name; result_name="$(basename "$apk_name" .apk)"
 
-  if [ ! -f "$apk_path" ]; then
-    echo "ERROR: $apk_path not found. Build it first with 'yarn build:apk'."
-    exit 1
-  fi
+  require_apk "$apk_name"
 
   echo "==> install $apk_name"
   adb install -r "$apk_path"
@@ -85,82 +84,131 @@ bundle_size() {
     | awk '$NF == "assets/index.android.bundle" { print $1 }'
 }
 
-# Append a "values + diffs" size report (native libs + JS bundle) to the markdown.
+# Append an N-column "values + deltas" size report (native libs + JS bundle) to
+# the markdown. First arg is the out file; the rest are APK names. The first APK
+# is the baseline; candidate cells show KB and (Δ vs baseline).
 append_size_report() {
-  local apk1="$OUT_DIR/$1" apk2="$OUT_DIR/$2" out="$3"
-  local l1 l2; l1="$(basename "$1" .apk)"; l2="$(basename "$2" .apk)"
+  local out="$1"; shift
+  local apks=("$@")
+  local n=${#apks[@]}
   local tmp; tmp="$(mktemp -d)"
 
-  lib_sizes "$apk1" > "$tmp/a"
-  lib_sizes "$apk2" > "$tmp/b"
+  local labels=() libfiles=()
+  local i
+  for i in "${!apks[@]}"; do
+    labels+=("$(basename "${apks[$i]}" .apk)")
+    lib_sizes "$OUT_DIR/${apks[$i]}" > "$tmp/lib.$i"
+    libfiles+=("$tmp/lib.$i")
+  done
 
   {
     echo ""
     echo "## Native libraries ($ABI)"
     echo ""
-    echo "Uncompressed \`.so\` sizes in KB (the APK is fat; $ABI is the per-device set). Δ is $l2 − $l1."
+    echo "Uncompressed \`.so\` sizes in KB (the APK is fat; $ABI is the per-device set). Δ is vs baseline **${labels[0]}**."
     echo ""
-    echo "| Library | $l1 | $l2 | Δ |"
-    echo "|---|--:|--:|--:|"
-    join -a1 -a2 -e 0 -o '0,1.2,2.2' -t"$(printf '\t')" "$tmp/a" "$tmp/b" \
-      | awk -F'\t' '
-          function kb(b) { return sprintf("%.1f", b / 1024) }
-          { d = $3 - $2; s = (d > 0 ? "+" : "");
-            printf "| %s | %s | %s | %s%s |\n", $1, kb($2), kb($3), s, kb(d);
-            t2 += $2; t3 += $3 }
-          END { d = t3 - t2; s = (d > 0 ? "+" : "");
-            printf "| **total** | **%s** | **%s** | **%s%s** |\n", kb(t2), kb(t3), s, kb(d) }'
+    printf '| Library'
+    for l in "${labels[@]}"; do printf ' | %s' "$l"; done
+    printf ' |\n'
+    printf '|---'
+    for _ in "${labels[@]}"; do printf '|--:'; done
+    printf '|\n'
 
-    local b1 b2; b1="$(bundle_size "$apk1")"; b2="$(bundle_size "$apk2")"
-    b1="${b1:-0}"; b2="${b2:-0}"
+    awk -v ncol="$n" '
+      FNR == 1 { idx++ }
+      { size[$1 SUBSEP idx] = $2; names[$1] = 1 }
+      END {
+        k = 0
+        for (nm in names) { sorted[k++] = nm }
+        for (a = 0; a < k; a++) {
+          for (b = a + 1; b < k; b++) {
+            if (sorted[b] < sorted[a]) { t = sorted[a]; sorted[a] = sorted[b]; sorted[b] = t }
+          }
+        }
+        for (a = 0; a < k; a++) {
+          nm = sorted[a]
+          base = size[nm SUBSEP 1] + 0
+          line = "| " nm
+          for (c = 1; c <= ncol; c++) {
+            v = size[nm SUBSEP c] + 0
+            cell = sprintf("%.1f", v / 1024)
+            if (c > 1) { d = v - base; s = (d > 0 ? "+" : ""); cell = cell " (" s sprintf("%.1f", d / 1024) ")" }
+            line = line " | " cell
+            tot[c] += v
+          }
+          print line " |"
+        }
+        line = "| **total**"
+        for (c = 1; c <= ncol; c++) {
+          v = tot[c]
+          if (c == 1) { cell = sprintf("**%.1f**", v / 1024) }
+          else { d = v - tot[1]; s = (d > 0 ? "+" : ""); cell = "**" sprintf("%.1f", v / 1024) " (" s sprintf("%.1f", d / 1024) ")**" }
+          line = line " | " cell
+        }
+        print line " |"
+      }
+    ' "${libfiles[@]}"
+
     echo ""
     echo "## JS bundle (assets/index.android.bundle)"
     echo ""
-    echo "Uncompressed Hermes bytecode in KB — the JS that actually ships. Δ is $l2 − $l1."
+    echo "Uncompressed Hermes bytecode in KB — the JS that actually ships. Δ is vs baseline **${labels[0]}**."
     echo ""
-    echo "| | $l1 | $l2 | Δ |"
-    echo "|---|--:|--:|--:|"
-    awk -v a="$b1" -v c="$b2" '
-      function kb(b) { return sprintf("%.1f", b / 1024) }
-      BEGIN { d = c - a; s = (d > 0 ? "+" : "");
-        printf "| Hermes bytecode | %s | %s | %s%s |\n", kb(a), kb(c), s, kb(d) }'
+    printf '|'
+    for l in "${labels[@]}"; do printf ' %s |' "$l"; done
+    printf '\n|'
+    for _ in "${labels[@]}"; do printf '--:|'; done
+    printf '\n'
+
+    local base_bundle; base_bundle="$(bundle_size "$OUT_DIR/${apks[0]}")"; base_bundle="${base_bundle:-0}"
+    printf '|'
+    for i in "${!apks[@]}"; do
+      local bs; bs="$(bundle_size "$OUT_DIR/${apks[$i]}")"; bs="${bs:-0}"
+      awk -v v="$bs" -v base="$base_bundle" -v first="$i" '
+        function kb(b) { return sprintf("%.1f", b / 1024) }
+        BEGIN {
+          if (first == 0) { printf " %s |", kb(v) }
+          else { d = v - base; s = (d > 0 ? "+" : ""); printf " %s (%s%s) |", kb(v), s, kb(d) }
+        }'
+    done
+    printf '\n'
   } >> "$out"
 
   rm -rf "$tmp"
 }
 
 if [ "$SIZE_ONLY" -eq 1 ]; then
-  require_apk "$1"
-  require_apk "$2"
+  for apk in "${APKS[@]}"; do require_apk "$apk"; done
 
-  L1="$(basename "$1" .apk)"
-  L2="$(basename "$2" .apk)"
   SIZE_MD="$OUT_DIR/size-summary.md"
-
+  BASE_LABEL="$(basename "${APKS[0]}" .apk)"
   {
-    echo "# APK size comparison: $L1 vs $L2"
+    echo "# APK size comparison (${#APKS[@]} builds)"
     echo ""
-    echo "APK-only measurement (no Flashlight/Maestro). Δ is $L2 − $L1."
+    echo "APK-only measurement (no Flashlight/Maestro). Baseline is **$BASE_LABEL**; Δ is vs baseline."
   } > "$SIZE_MD"
 
   echo "==> size report (native libs + JS bundle -> $SIZE_MD)"
-  append_size_report "$1" "$2" "$SIZE_MD"
+  append_size_report "$SIZE_MD" "${APKS[@]}"
   echo "==> wrote $SIZE_MD"
   exit 0
 fi
 
-run_one "$1"
-run_one "$2"
+for apk in "${APKS[@]}"; do
+  run_one "$apk"
+done
 
-R1="$OUT_DIR/$(basename "$1" .apk).json"
-R2="$OUT_DIR/$(basename "$2" .apk).json"
+RESULTS=()
+for apk in "${APKS[@]}"; do
+  RESULTS+=("$OUT_DIR/$(basename "$apk" .apk).json")
+done
 
 SUMMARY="$OUT_DIR/summary.md"
 echo "==> summarize (markdown -> $SUMMARY)"
-node "$ROOT/scripts/summarize.js" "$R1" "$R2" "$SUMMARY"
+node "$ROOT/scripts/summarize.js" "$SUMMARY" "${RESULTS[@]}"
 
 echo "==> size report (native libs + JS bundle -> $SUMMARY)"
-append_size_report "$1" "$2" "$SUMMARY"
+append_size_report "$SUMMARY" "${APKS[@]}"
 
 echo "==> flashlight report (comparison)"
-flashlight report "$R1" "$R2"
+flashlight report "${RESULTS[@]}"

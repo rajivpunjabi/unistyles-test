@@ -10,7 +10,12 @@ import { createStyleSheet, UnistylesRuntime, useStyles } from 'react-native-unis
 import { TEST_ID } from '@/perf/constants';
 import { toggleColorVariant, useVariantStore } from '@/perf/stores';
 
-function Controls() {
+type ControlsProps = {
+  bump: number;
+  onBump: () => void;
+};
+
+function Controls({ bump, onBump }: ControlsProps) {
   const { styles } = useStyles(stylesheet);
   const colorVariant = useVariantStore((s) => s.colorVariant);
 
@@ -26,6 +31,10 @@ function Controls() {
 
       <Pressable testID={TEST_ID.VARIANT_TOGGLE} style={styles.button} onPress={toggleColorVariant}>
         <Text style={styles.label}>Variant: {colorVariant}</Text>
+      </Pressable>
+
+      <Pressable testID={TEST_ID.STATIC_BUMP} style={styles.button} onPress={onBump}>
+        <Text style={styles.label}>Bump: {bump}</Text>
       </Pressable>
     </View>
   );

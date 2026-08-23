@@ -1,0 +1,31 @@
+# Bump perf flow for Flashlight (paced).
+# Taps the unrelated root-state "Bump" 10x on the Static screen, then 10x on the
+# Nested screen, with a 300ms delay between taps (tapOn repeat/delay). Bump
+# re-renders the screen root but NOT the memoized boxes/subtrees — the isolation
+# baseline, in contrast to toggle-theme.yaml which drives style updates.
+#
+# waitToSettleTimeoutMs: 0 -> don't wait for the UI to go idle after a tap.
+appId: com.anonymous.unistylesperf
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'control-static-bump'
+    timeout: 30000
+- tapOn:
+    id: 'control-static-bump'
+    repeat: 10
+    delay: 300
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    text: 'Nested'
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible:
+      id: 'nested-bump'
+    timeout: 30000
+- tapOn:
+    id: 'nested-bump'
+    repeat: 10
+    delay: 300
+    waitToSettleTimeoutMs: 0

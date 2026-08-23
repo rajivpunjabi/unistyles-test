@@ -8,10 +8,10 @@
  * We aggregate per-iteration first (mean of a metric within an iteration), then
  * average those across iterations — this matches how Flashlight's own report
  * summarizes, so the numbers line up with the web report rather than pooling all
- * samples flat. The first file is the baseline; the second is the candidate, and
- * deltas are candidate-vs-baseline.
+ * samples flat. The first JSON is the baseline; every other JSON is a candidate,
+ * and deltas are candidate-vs-baseline.
  *
- * Usage: node scripts/summarize.js <baseline.json> <candidate.json> [out.md]
+ * Usage: node scripts/summarize.js [out.md] <result1.json> <result2.json> [...]
  */
 const fs = require('fs');
 const path = require('path');
@@ -159,75 +159,104 @@ function deltaPct(baseline, candidate) {
   return `${sign}${pct.toFixed(1)}%`;
 }
 
-function row(metric, baseVal, candVal, unit, delta) {
+// Metric table spec: label + how to pull it from an aggregate + unit/precision.
+const METRICS = [
+  { label: 'Avg FPS', get: (r) => r.fps, unit: '', digits: 1 },
+  { label: 'Min FPS (worst sample)', get: (r) => r.fpsMin, unit: '', digits: 1 },
+  { label: `Jank (% samples < ${JANK_FPS} fps)`, get: (r) => r.jankPct, unit: '%', digits: 1 },
+  { label: 'Total CPU', get: (r) => r.cpuTotal, unit: '%', digits: 1 },
+  { label: 'CPU peak', get: (r) => r.cpuMax, unit: '%', digits: 1 },
+  { label: 'UI-thread CPU', get: (r) => r.cpuUi, unit: '%', digits: 1 },
+  { label: 'JS-thread CPU (mqt_v_js)', get: (r) => r.cpuJs, unit: '%', digits: 1 },
+  { label: 'RenderThread CPU', get: (r) => r.cpuRender, unit: '%', digits: 1 },
+  { label: 'Avg RAM', get: (r) => r.ram, unit: 'MB', digits: 1 },
+  { label: 'RAM peak', get: (r) => r.ramMax, unit: 'MB', digits: 1 },
+  { label: 'Avg flow time', get: (r) => r.avgTestTimeMs / 1000, unit: 's', digits: 2 },
+];
+
+// A single table cell: value + unit, and (Δ% vs baseline) for candidates.
+function cell(value, unit, digits, baseValue, isBaseline) {
   const u = unit ? ` ${unit}` : '';
-  return `| ${metric} | ${baseVal}${u} | ${candVal}${u} | ${delta} |`;
+  const v = `${fmt(value, digits)}${u}`;
+  if (isBaseline) {
+    return v;
+  }
+  return `${v} (${deltaPct(baseValue, value)})`;
 }
 
-function buildMarkdown(base, cand) {
+// results[0] is the baseline; every other result is a candidate compared to it.
+function buildMarkdown(results) {
+  const base = results[0];
+  const labels = results.map((r) => r.label);
   const lines = [];
-  lines.push(`# Flashlight comparison: ${base.label} vs ${cand.label}`);
+
+  lines.push(`# Flashlight comparison: ${labels.join(' vs ')}`);
   lines.push('');
   lines.push(
-    `Baseline **${base.label}**, candidate **${cand.label}**. ` +
-      `${base.iterationCount} iterations each ` +
-      `(${base.sampleCount} / ${cand.sampleCount} samples). ` +
-      'Deltas are candidate vs baseline. Metrics are per-iteration means averaged across iterations; ' +
-      'min/max are over raw samples.'
+    `Baseline **${base.label}**. ${base.iterationCount} iterations each. ` +
+      'Candidate cells show the value and (Δ% vs baseline). Metrics are per-iteration means ' +
+      'averaged across iterations; min/max are over raw samples.',
   );
   lines.push('');
   lines.push('## Metrics');
   lines.push('');
-  lines.push('| Metric | ' + base.label + ' | ' + cand.label + ' | Δ |');
-  lines.push('|---|---|---|---|');
-  lines.push(row('Avg FPS', fmt(base.fps), fmt(cand.fps), '', deltaPct(base.fps, cand.fps)));
-  lines.push(row('Min FPS (worst sample)', fmt(base.fpsMin), fmt(cand.fpsMin), '', deltaPct(base.fpsMin, cand.fpsMin)));
-  lines.push(row(`Jank (% samples < ${JANK_FPS} fps)`, fmt(base.jankPct), fmt(cand.jankPct), '%', deltaPct(base.jankPct, cand.jankPct)));
-  lines.push(row('Total CPU', fmt(base.cpuTotal), fmt(cand.cpuTotal), '%', deltaPct(base.cpuTotal, cand.cpuTotal)));
-  lines.push(row('CPU peak', fmt(base.cpuMax), fmt(cand.cpuMax), '%', deltaPct(base.cpuMax, cand.cpuMax)));
-  lines.push(row('UI-thread CPU', fmt(base.cpuUi), fmt(cand.cpuUi), '%', deltaPct(base.cpuUi, cand.cpuUi)));
-  lines.push(row('JS-thread CPU (mqt_v_js)', fmt(base.cpuJs), fmt(cand.cpuJs), '%', deltaPct(base.cpuJs, cand.cpuJs)));
-  lines.push(row('RenderThread CPU', fmt(base.cpuRender), fmt(cand.cpuRender), '%', deltaPct(base.cpuRender, cand.cpuRender)));
-  lines.push(row('Avg RAM', fmt(base.ram), fmt(cand.ram), 'MB', deltaPct(base.ram, cand.ram)));
-  lines.push(row('RAM peak', fmt(base.ramMax), fmt(cand.ramMax), 'MB', deltaPct(base.ramMax, cand.ramMax)));
-  lines.push(row('Avg flow time', fmt(base.avgTestTimeMs / 1000, 2), fmt(cand.avgTestTimeMs / 1000, 2), 's', deltaPct(base.avgTestTimeMs, cand.avgTestTimeMs)));
+  lines.push(
+    '| Metric | ' + labels.map((l, i) => (i === 0 ? `${l} (baseline)` : l)).join(' | ') + ' |',
+  );
+  lines.push('|---' + '|---'.repeat(labels.length) + '|');
+  for (let m = 0; m < METRICS.length; m += 1) {
+    const spec = METRICS[m];
+    const baseVal = spec.get(base);
+    const cells = [];
+    for (let i = 0; i < results.length; i += 1) {
+      cells.push(cell(spec.get(results[i]), spec.unit, spec.digits, baseVal, i === 0));
+    }
+    lines.push(`| ${spec.label} | ${cells.join(' | ')} |`);
+  }
   lines.push('');
   lines.push('## Findings');
   lines.push('');
-  for (const finding of findings(base, cand)) {
+  for (const finding of findings(results)) {
     lines.push(`- ${finding}`);
   }
   lines.push('');
   return lines.join('\n');
 }
 
-function findings(base, cand) {
+function findings(results) {
+  const base = results[0];
   const out = [];
-  out.push(
-    `JS-thread CPU: ${fmt(base.cpuJs)}% -> ${fmt(cand.cpuJs)}% (${deltaPct(base.cpuJs, cand.cpuJs)}). ` +
-      'This is the primary v2-vs-v3 signal: style updates that no longer re-render in JS.'
-  );
-  out.push(`Total CPU: ${fmt(base.cpuTotal)}% -> ${fmt(cand.cpuTotal)}% (${deltaPct(base.cpuTotal, cand.cpuTotal)}).`);
-  out.push(
-    `UI-thread CPU: ${fmt(base.cpuUi)}% -> ${fmt(cand.cpuUi)}% (${deltaPct(base.cpuUi, cand.cpuUi)}) ` +
-      '(the on-screen change still applies on both, so this stays close).'
-  );
-  out.push(`Avg FPS: ${fmt(base.fps)} -> ${fmt(cand.fps)} (${deltaPct(base.fps, cand.fps)}); worst sample ${fmt(base.fpsMin)} -> ${fmt(cand.fpsMin)}.`);
-  out.push(`Avg RAM: ${fmt(base.ram)} MB -> ${fmt(cand.ram)} MB (${deltaPct(base.ram, cand.ram)}).`);
+  for (let i = 1; i < results.length; i += 1) {
+    const c = results[i];
+    out.push(
+      `**${c.label}** vs ${base.label}: ` +
+        `JS-thread CPU ${fmt(base.cpuJs)}% -> ${fmt(c.cpuJs)}% (${deltaPct(base.cpuJs, c.cpuJs)}); ` +
+        `total CPU ${fmt(base.cpuTotal)}% -> ${fmt(c.cpuTotal)}% (${deltaPct(base.cpuTotal, c.cpuTotal)}); ` +
+        `avg FPS ${fmt(base.fps)} -> ${fmt(c.fps)} (${deltaPct(base.fps, c.fps)}); ` +
+        `avg RAM ${fmt(base.ram)} -> ${fmt(c.ram)} MB (${deltaPct(base.ram, c.ram)}).`,
+    );
+  }
   return out;
 }
 
 function main() {
-  const [baseFile, candFile, outArg] = process.argv.slice(2);
-  if (!baseFile || !candFile) {
-    console.error('usage: node scripts/summarize.js <baseline.json> <candidate.json> [out.md]');
+  const args = process.argv.slice(2);
+  const jsonFiles = args.filter((a) => a.endsWith('.json'));
+  const mdArg = args.find((a) => a.endsWith('.md'));
+  if (jsonFiles.length < 2) {
+    console.error(
+      'usage: node scripts/summarize.js [out.md] <result1.json> <result2.json> [result3.json ...]',
+    );
     process.exit(1);
   }
-  const base = aggregate(readResult(baseFile));
-  const cand = aggregate(readResult(candFile));
-  const markdown = buildMarkdown(base, cand);
 
-  const outFile = outArg || path.join(path.dirname(baseFile), 'summary.md');
+  const results = [];
+  for (let i = 0; i < jsonFiles.length; i += 1) {
+    results.push(aggregate(readResult(jsonFiles[i])));
+  }
+  const markdown = buildMarkdown(results);
+
+  const outFile = mdArg || path.join(path.dirname(jsonFiles[0]), 'summary.md');
   fs.writeFileSync(outFile, markdown);
   console.log(markdown);
   console.log(`\nWrote ${outFile}`);
