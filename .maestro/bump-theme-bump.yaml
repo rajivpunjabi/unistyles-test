@@ -1,0 +1,47 @@
+# Mixed perf flow for Flashlight (paced): bump 5x, toggle theme once, bump 5x.
+# Exercises the isolation baseline (root-state bump, no style update) interleaved
+# with a single style update (theme toggle) on the Static screen. Same testIDs on
+# the v2 and v3 branches so every APK runs the identical flow.
+#
+# waitToSettleTimeoutMs: 0 -> don't wait for the UI to go idle after a tap; the
+# tapOn `delay` paces the taps instead.
+appId: com.anonymous.unistylesperf
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'control-static-bump'
+    timeout: 30000
+- tapOn:
+    id: 'control-static-bump'
+    repeat: 5
+    delay: 300
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    id: 'control-theme-toggle'
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    id: 'control-static-bump'
+    repeat: 5
+    delay: 300
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    text: 'Nested'
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible:
+      id: 'nested-bump'
+    timeout: 30000
+- tapOn:
+    id: 'nested-bump'
+    repeat: 5
+    delay: 300
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    id: 'nested-theme'
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    id: 'nested-bump'
+    repeat: 5
+    delay: 300
+    waitToSettleTimeoutMs: 0

@@ -24,7 +24,6 @@ ROOT="$(pwd)"
 OUT_DIR="$ROOT/outputs"
 APP_ID="$(node -e "console.log(require('./app.json').expo.android.package)")"
 ITERATION_COUNT=10
-DURATION_MS=8000
 # ABI to diff native libs for. The release APK is "fat" (ships every ABI), but a
 # device installs only one — arm64-v8a on modern hardware — so that single set is
 # the real per-device native footprint. Override with ABI=... if needed.
@@ -81,7 +80,6 @@ run_one() {
   flashlight test \
     --bundleId "$APP_ID" \
     --testCommand "maestro test $FLOW" \
-    --duration "$DURATION_MS" \
     --iterationCount "$ITERATION_COUNT" \
     --resultsTitle "$result_name" \
     --resultsFilePath "$OUT_DIR/${result_name}.json"
