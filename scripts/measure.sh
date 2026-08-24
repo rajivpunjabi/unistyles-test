@@ -81,7 +81,6 @@ run_one() {
   flashlight test \
     --bundleId "$APP_ID" \
     --testCommand "maestro test $FLOW" \
-    --duration "$DURATION_MS" \
     --iterationCount "$ITERATION_COUNT" \
     --resultsTitle "$result_name" \
     --resultsFilePath "$OUT_DIR/${result_name}.json"
