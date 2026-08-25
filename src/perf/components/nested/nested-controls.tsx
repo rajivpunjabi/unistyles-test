@@ -1,14 +1,12 @@
 /**
- * Control bar for the nested screen. Its own useStyles consumer so the screen
- * (the trees' parent) doesn't have to be — a themed screen would re-render on
- * every theme toggle and cascade into the non-memoized trees. As a sibling of
- * the trees, this component's theme re-render stays contained.
+ * Control bar for the nested screen. Static react-native StyleSheet with fixed
+ * light-theme colors (no theming on this branch).
  */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { lightTheme } from '@/styles/themes';
 import { TEST_ID } from '../../constants';
 
 type NestedControlsProps = {
@@ -19,8 +17,6 @@ type NestedControlsProps = {
 };
 
 function NestedControls({ bump, onToggleTheme, onBump, onReset }: NestedControlsProps) {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <View style={styles.controls}>
       <Pressable testID={TEST_ID.NESTED_THEME} style={styles.button} onPress={onToggleTheme}>
@@ -36,7 +32,7 @@ function NestedControls({ bump, onToggleTheme, onBump, onReset }: NestedControls
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create({
   controls: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -47,13 +43,13 @@ const stylesheet = createStyleSheet((theme) => ({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: theme.colors.elementActive,
+    backgroundColor: lightTheme.colors.elementActive,
   },
   label: {
-    color: theme.colors.text,
+    color: lightTheme.colors.text,
     fontWeight: '600',
     textAlign: 'center',
   },
-}));
+});
 
 export { NestedControls };

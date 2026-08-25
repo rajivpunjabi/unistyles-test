@@ -8,7 +8,6 @@
 
 import React, { memo } from 'react';
 import { View } from 'react-native';
-import { useStyles } from 'react-native-unistyles';
 
 import { NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
@@ -29,14 +28,13 @@ const ParentLeaf = memo(function ParentLeaf({ level }: { level: number }) {
 });
 
 const ParentChain = memo(function ParentChain({ level }: { level: number }) {
-  const { styles } = useStyles(chainThemedSheet);
   const commits = useNestedCommitTracker(KEY, NEST_PART.CHAIN);
 
   const childLevel = level + 1;
   const childIsLeaf = childLevel >= LAST_LEVEL;
 
   return (
-    <View style={styles.node}>
+    <View style={chainThemedSheet.node}>
       <BoxContent label={`C${level}`} count={commits} />
       <View style={plainStyles.childrenRow}>
         {CHILD_INDICES.map((c) =>

@@ -4,8 +4,7 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet, Text, View } from 'react-native';
 
 import {
   DynamicPlainBox,
@@ -18,6 +17,7 @@ import {
 import { CATEGORY, CATEGORY_LIST, CATEGORY_SHORT, INSTANCE_COUNT } from '../constants';
 import { PerfProfiler } from '../perf-profiler';
 import type { Category } from '../types';
+import { lightTheme } from '@/styles/themes';
 
 const INDICES = Array.from({ length: INSTANCE_COUNT }, (_, i) => i);
 
@@ -40,8 +40,6 @@ const BOX_BY_CATEGORY: Record<Category, (index: number) => React.ReactNode> = {
 };
 
 function SectionHeader({ category }: { category: Category }) {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <Text style={styles.header}>
       {CATEGORY_SHORT[category]} · {SECTION_LABEL[category]}
@@ -50,8 +48,6 @@ function SectionHeader({ category }: { category: Category }) {
 }
 
 function StaticGrid() {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <View style={styles.content}>
       {CATEGORY_LIST.map((category) => (
@@ -64,11 +60,11 @@ function StaticGrid() {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create({
   content: {
     padding: 8,
     paddingBottom: 120,
-    backgroundColor: theme.colors.background,
+    backgroundColor: lightTheme.colors.background,
   },
   section: {
     flexDirection: 'row',
@@ -76,8 +72,8 @@ const stylesheet = createStyleSheet((theme) => ({
     justifyContent: 'center',
   },
   header: {
-    color: theme.colors.text,
-    backgroundColor: theme.colors.element,
+    color: lightTheme.colors.text,
+    backgroundColor: lightTheme.colors.element,
     fontSize: 12,
     fontWeight: '700',
     paddingVertical: 4,
@@ -86,6 +82,6 @@ const stylesheet = createStyleSheet((theme) => ({
     marginBottom: 4,
     borderRadius: 4,
   },
-}));
+});
 
 export { StaticGrid };

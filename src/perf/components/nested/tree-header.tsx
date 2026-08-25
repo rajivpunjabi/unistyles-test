@@ -1,12 +1,12 @@
 /**
- * Section label above a tree. Its own useStyles consumer, rendered as a SIBLING
- * of the tree (never wrapping it) so its theme re-render does not cascade into
- * the tree.
+ * Section label above a tree. Static react-native StyleSheet with fixed
+ * light-theme colors (no theming).
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { lightTheme } from '@/styles/themes';
 
 type TreeHeaderProps = {
   label: string;
@@ -14,8 +14,6 @@ type TreeHeaderProps = {
 };
 
 function TreeHeader({ label, component }: TreeHeaderProps) {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <View style={styles.header}>
       <Text style={styles.label}>{label}</Text>
@@ -24,9 +22,9 @@ function TreeHeader({ label, component }: TreeHeaderProps) {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create({
   header: {
-    backgroundColor: theme.colors.element,
+    backgroundColor: lightTheme.colors.element,
     paddingVertical: 4,
     paddingHorizontal: 8,
     marginTop: 12,
@@ -35,16 +33,16 @@ const stylesheet = createStyleSheet((theme) => ({
     borderRadius: 4,
   },
   label: {
-    color: theme.colors.text,
+    color: lightTheme.colors.text,
     fontSize: 12,
     fontWeight: '700',
   },
   component: {
-    color: theme.colors.textMuted,
+    color: lightTheme.colors.textMuted,
     fontSize: 10,
     fontWeight: '600',
     fontVariant: ['tabular-nums'],
   },
-}));
+});
 
 export { TreeHeader };

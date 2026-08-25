@@ -1,16 +1,12 @@
 /**
  * Shared styles + shape constants for the nested binary trees. Each variant tree
- * (all/parent/leaf) is its own component.
- *
- * Themed node/leaf are unistyles createStyleSheet (theme consumers, read via
- * useStyles). Plain node/leaf + the children row are react-native StyleSheet —
- * NOT unistyles — on purpose: the plain nodes must stay non-consumers so a theme
- * toggle never re-renders them (that is what the leaf-no-memo variant shows).
+ * (all/parent/leaf) is its own component. All static react-native StyleSheet;
+ * the "themed" node/leaf just use fixed light-theme colors (no theming).
  */
 
 import { StyleSheet } from 'react-native';
-import { createStyleSheet } from 'react-native-unistyles';
 
+import { lightTheme } from '@/styles/themes';
 import { NEST_BRANCHING, NEST_DEPTH } from '../../constants';
 
 const CHILD_INDICES = Array.from({ length: NEST_BRANCHING }, (_, i) => i);
@@ -45,7 +41,7 @@ const plainStyles = StyleSheet.create({
   },
 });
 
-const chainThemedSheet = createStyleSheet((theme) => ({
+const chainThemedSheet = StyleSheet.create({
   node: {
     padding: 3,
     margin: 1,
@@ -53,12 +49,12 @@ const chainThemedSheet = createStyleSheet((theme) => ({
     borderRadius: 4,
     alignItems: 'center',
     gap: 3,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.element,
+    borderColor: lightTheme.colors.border,
+    backgroundColor: lightTheme.colors.element,
   },
-}));
+});
 
-const leafThemedSheet = createStyleSheet((theme) => ({
+const leafThemedSheet = StyleSheet.create({
   leaf: {
     width: 40,
     height: 30,
@@ -67,9 +63,9 @@ const leafThemedSheet = createStyleSheet((theme) => ({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.element,
+    borderColor: lightTheme.colors.border,
+    backgroundColor: lightTheme.colors.element,
   },
-}));
+});
 
 export { CHILD_INDICES, LAST_LEVEL, plainStyles, chainThemedSheet, leafThemedSheet };

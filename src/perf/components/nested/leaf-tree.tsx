@@ -8,7 +8,6 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { useStyles } from 'react-native-unistyles';
 
 import { NEST_PART } from '../../constants';
 import type { NestVariantKey } from '../../types';
@@ -19,11 +18,10 @@ import { CHILD_INDICES, LAST_LEVEL, leafThemedSheet, plainStyles } from './neste
 const KEY: NestVariantKey = 'leaf-no-memo';
 
 function LeafLeaf({ level }: { level: number }) {
-  const { styles } = useStyles(leafThemedSheet);
   const commits = useNestedCommitTracker(KEY, NEST_PART.LEAF);
 
   return (
-    <View style={styles.leaf}>
+    <View style={leafThemedSheet.leaf}>
       <BoxContent label={`L${level}`} count={commits} />
     </View>
   );
