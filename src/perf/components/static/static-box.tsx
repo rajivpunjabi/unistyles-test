@@ -1,18 +1,17 @@
 /**
- * Plain createStyleSheet with no theme access — the baseline. Even though it
- * reads nothing from the theme, it still goes through useStyles, so this proves
- * whether v2 re-renders theme-agnostic components on a theme switch.
+ * Plain StyleSheet.create with no theme access — the baseline. It has no theme
+ * dependency, so in v3 a theme switch should neither re-render nor update it.
  */
 
 import React from 'react';
 import { View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
 import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
-const stylesheet = createStyleSheet({
+const styles = StyleSheet.create({
   box: {
     width: 60,
     height: 48,
@@ -31,7 +30,6 @@ type StaticBoxProps = {
 };
 
 function StaticBoxComponent({ index }: StaticBoxProps) {
-  const { styles } = useStyles(stylesheet);
   const commits = useCommitTracker(CATEGORY.STATIC);
 
   return (

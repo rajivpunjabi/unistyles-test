@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { Controls } from '@/components/controls';
 import { Dashboard } from '@/components/dashboard';
@@ -12,7 +12,6 @@ import { StaticGrid } from '@/perf/grids/static-grid';
  * should skip, so the dashboard shows ~0 box commits on bump (isolation check).
  */
 export default function StaticScreen() {
-  const { styles } = useStyles(stylesheet);
   const [bump, setBump] = useState(0);
 
   return (
@@ -24,7 +23,7 @@ export default function StaticScreen() {
   );
 }
 
-const stylesheet = createStyleSheet({
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#ffffff',

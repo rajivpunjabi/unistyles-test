@@ -6,13 +6,12 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { NEST_VARIANTS } from '@/perf/constants';
 import { useNestedMetrics } from '@/perf/hooks';
 
 function NestedDashboard() {
-  const { styles } = useStyles(stylesheet);
   const metrics = useNestedMetrics();
 
   return (
@@ -37,7 +36,7 @@ function NestedDashboard() {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   container: {
     padding: 12,
     gap: 3,

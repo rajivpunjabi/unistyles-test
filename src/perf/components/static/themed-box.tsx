@@ -5,13 +5,13 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
 import { useCommitTracker } from '../../hooks';
 import { BoxContent } from '../box-content';
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   box: {
     width: 60,
     height: 48,
@@ -30,7 +30,6 @@ type ThemedBoxProps = {
 };
 
 function ThemedBoxComponent({ index }: ThemedBoxProps) {
-  const { styles } = useStyles(stylesheet);
   const commits = useCommitTracker(CATEGORY.THEMED);
 
   return (

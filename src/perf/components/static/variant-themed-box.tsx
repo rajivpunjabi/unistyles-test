@@ -6,14 +6,14 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { CATEGORY, CATEGORY_SHORT, boxTestId } from '../../constants';
 import { useCommitTracker } from '../../hooks';
 import { useVariantStore } from '../../stores';
 import { BoxContent } from '../box-content';
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   box: {
     margin: 2,
     borderRadius: 6,
@@ -40,7 +40,7 @@ type VariantThemedBoxProps = {
 
 function VariantThemedBoxComponent({ index }: VariantThemedBoxProps) {
   const colorVariant = useVariantStore((s) => s.colorVariant);
-  const { styles } = useStyles(stylesheet, {
+  styles.useVariants({
     color: colorVariant,
     size: index % 2 === 0 ? 'small' : 'large',
   });

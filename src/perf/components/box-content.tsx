@@ -5,14 +5,14 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 type BoxContentProps = {
   label: string;
   count: number;
 };
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   pill: {
     backgroundColor: theme.colors.background,
     borderRadius: 4,
@@ -35,8 +35,6 @@ const stylesheet = createStyleSheet((theme) => ({
 }));
 
 function BoxContent({ label, count }: BoxContentProps) {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <View style={styles.pill}>
       <Text style={styles.label}>{label}</Text>

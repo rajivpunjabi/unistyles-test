@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 type TreeHeaderProps = {
   label: string;
@@ -14,8 +14,6 @@ type TreeHeaderProps = {
 };
 
 function TreeHeader({ label, component }: TreeHeaderProps) {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <View style={styles.header}>
       <Text style={styles.label}>{label}</Text>
@@ -24,7 +22,7 @@ function TreeHeader({ label, component }: TreeHeaderProps) {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   header: {
     backgroundColor: theme.colors.element,
     paddingVertical: 4,

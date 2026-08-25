@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { StyleSheet } from 'react-native-unistyles';
 
 import {
   DynamicPlainBox,
@@ -40,8 +40,6 @@ const BOX_BY_CATEGORY: Record<Category, (index: number) => React.ReactNode> = {
 };
 
 function SectionHeader({ category }: { category: Category }) {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <Text style={styles.header}>
       {CATEGORY_SHORT[category]} · {SECTION_LABEL[category]}
@@ -50,8 +48,6 @@ function SectionHeader({ category }: { category: Category }) {
 }
 
 function StaticGrid() {
-  const { styles } = useStyles(stylesheet);
-
   return (
     <View style={styles.content}>
       {CATEGORY_LIST.map((category) => (
@@ -64,7 +60,7 @@ function StaticGrid() {
   );
 }
 
-const stylesheet = createStyleSheet((theme) => ({
+const styles = StyleSheet.create((theme) => ({
   content: {
     padding: 8,
     paddingBottom: 120,
